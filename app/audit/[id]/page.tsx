@@ -68,34 +68,34 @@ export default async function AuditPage({ params }: Props) {
   const summary = audit.summary as string | null;
 
   return (
-    <main className="mx-auto max-w-3xl px-5 py-12 sm:py-16 flex-1 w-full">
-      <header className="mb-10">
-        <div className="text-xs font-medium uppercase tracking-widest text-emerald-700 dark:text-emerald-400 mb-2">
+    <main className="mx-auto max-w-3xl px-5 py-14 sm:py-20 flex-1 w-full">
+      <header className="mb-12">
+        <div className="text-xs font-semibold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-3">
           SpendLens
         </div>
-        <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight">
+        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1]">
           AI Spend Audit Results
         </h1>
-        <p className="mt-3 text-zinc-600 dark:text-zinc-400 max-w-xl">
+        <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400 max-w-xl leading-relaxed">
           Shared audit — identifying details stripped. Tools and savings shown.
         </p>
       </header>
 
       <SharedAuditView result={result} summary={summary} />
 
-      <div className="mt-10 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6 text-center">
-        <p className="text-zinc-600 dark:text-zinc-400 mb-3">
+      <div className="mt-12 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 p-8 text-center shadow-sm">
+        <p className="text-zinc-600 dark:text-zinc-400 mb-4 text-lg">
           Want to see where your team is overpaying?
         </p>
         <Link
           href="/"
-          className="inline-block rounded-md bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-6 py-3 font-medium hover:opacity-90"
+          className="inline-flex items-center gap-2 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-8 py-3.5 font-semibold shadow-md shadow-zinc-900/10 dark:shadow-white/5 hover:bg-zinc-800 dark:hover:bg-zinc-100"
         >
-          Run your free audit →
+          Run your free audit
         </Link>
       </div>
 
-      <footer className="mt-16 text-xs text-zinc-500 border-t border-zinc-200 dark:border-zinc-800 pt-6">
+      <footer className="mt-20 text-xs text-zinc-400 dark:text-zinc-600 border-t border-zinc-200 dark:border-zinc-800 pt-6">
         Built for the Credex internship. Pricing verified against vendor sites on
         2026-05-07. Not affiliated with the tools listed.
       </footer>
