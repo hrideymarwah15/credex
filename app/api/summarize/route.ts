@@ -12,7 +12,7 @@ export const runtime = "nodejs";
 const Body = z.object({
   input: z.object({
     teamSize: z.number().int().min(1).max(10000),
-    useCase: z.string(),
+    useCase: z.string().max(100),
     tools: z.array(z.any()).max(20),
   }),
   result: z.object({
