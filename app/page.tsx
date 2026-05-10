@@ -65,9 +65,11 @@ export default function Home() {
   return (
     <main className="mx-auto max-w-3xl px-5 py-14 sm:py-20 flex-1 w-full">
       <header className="mb-12">
-        <div className="text-xs font-semibold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-3">
-          SpendLens
-        </div>
+        <nav aria-label="Site">
+          <div className="text-xs font-semibold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-3">
+            SpendLens
+          </div>
+        </nav>
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1]">
           Audit your AI tool spend<br className="hidden sm:block" /> in 90 seconds.
         </h1>
@@ -78,15 +80,17 @@ export default function Home() {
       </header>
 
       {result ? (
-        <div className="space-y-10">
+        <section aria-label="Audit results" className="space-y-10">
           <Results result={result} summary={summary} onReset={reset} />
           <LeadCapture
             result={result}
             auditId={auditId}
           />
-        </div>
+        </section>
       ) : (
-        <AuditForm onSubmit={handleAudit} loading={loading} />
+        <section aria-label="Audit input">
+          <AuditForm onSubmit={handleAudit} loading={loading} />
+        </section>
       )}
 
       <footer className="mt-20 text-xs text-zinc-400 dark:text-zinc-600 border-t border-zinc-200 dark:border-zinc-800 pt-6">
