@@ -9,6 +9,10 @@ interface Props {
   auditId: string | null;
 }
 
+const inputClasses = "mt-1 block w-full rounded-lg border border-zinc-200 dark:border-zinc-700/80 bg-white dark:bg-zinc-900 px-3 py-2 text-sm shadow-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-600 focus:border-emerald-500 dark:focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20";
+
+const smallInputClasses = "mt-1 block w-full rounded-lg border border-zinc-200 dark:border-zinc-700/80 bg-white dark:bg-zinc-900 px-2.5 py-1.5 text-sm shadow-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-600 focus:border-emerald-500 dark:focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20";
+
 export function LeadCapture({ result, auditId }: Props) {
   const [email, setEmail] = useState("");
   const [companyName, setCompanyName] = useState("");
@@ -65,20 +69,22 @@ export function LeadCapture({ result, auditId }: Props) {
 
   if (status === "success") {
     return (
-      <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-6 space-y-4">
-        <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400">
-          <Check className="w-5 h-5" aria-hidden="true" />
-          <span className="font-medium">Got it — check your inbox.</span>
+      <div className="rounded-2xl border border-emerald-200 dark:border-emerald-800/50 bg-emerald-50/50 dark:bg-emerald-950/20 p-6 sm:p-8 space-y-5 shadow-sm">
+        <div className="flex items-center gap-2.5 text-emerald-700 dark:text-emerald-400">
+          <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center" aria-hidden="true">
+            <Check className="w-4 h-4" />
+          </div>
+          <span className="font-semibold text-lg">Got it — check your inbox.</span>
         </div>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+        <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
           {isHighSavings
             ? "We'll send your full audit report and a Credex team member will reach out within 48 hours about additional savings opportunities."
             : "We'll send your audit report and notify you when new optimizations apply to your stack."}
         </p>
 
         {shareUrl && (
-          <div className="pt-2 border-t border-emerald-500/20">
-            <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2 flex items-center gap-1">
+          <div className="pt-4 border-t border-emerald-200 dark:border-emerald-800/40">
+            <p className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-2.5 flex items-center gap-1.5">
               <Share2 className="w-4 h-4" aria-hidden="true" /> Share your audit
             </p>
             <div className="flex items-center gap-2">
@@ -86,14 +92,14 @@ export function LeadCapture({ result, auditId }: Props) {
                 readOnly
                 value={shareUrl}
                 aria-label="Shareable audit URL"
-                className="flex-1 text-sm bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700 rounded-md px-3 py-2 text-zinc-600 dark:text-zinc-400"
+                className="flex-1 text-xs bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2 text-zinc-600 dark:text-zinc-400 font-mono shadow-sm"
               />
               <button
                 onClick={handleCopy}
                 aria-label="Copy share link"
-                className="shrink-0 inline-flex items-center gap-1 text-sm bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-3 py-2 rounded-md hover:opacity-90"
+                className="shrink-0 inline-flex items-center gap-1.5 text-sm font-medium bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-3.5 py-2 rounded-lg shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-100"
               >
-                <Link2 className="w-3 h-3" aria-hidden="true" />
+                <Link2 className="w-3.5 h-3.5" aria-hidden="true" />
                 {copied ? "Copied!" : "Copy"}
               </button>
             </div>
@@ -104,21 +110,21 @@ export function LeadCapture({ result, auditId }: Props) {
   }
 
   return (
-    <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 p-6 space-y-4">
+    <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 p-6 sm:p-8 space-y-5 shadow-sm">
       <div>
-        <h3 className="font-semibold text-lg">
+        <h3 className="font-bold text-lg">
           {isHighSavings
             ? "Get your full report + Credex consultation"
             : "Save your audit results"}
         </h3>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
+        <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1.5 leading-relaxed">
           {isHighSavings
             ? "We'll email the full report and connect you with our team for additional committed-use savings."
             : "We'll email your report and notify you when new savings opportunities apply to your tools."}
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-3">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {/* Honeypot — hidden from real users */}
         <div className="absolute opacity-0 pointer-events-none" aria-hidden="true" tabIndex={-1}>
           <input
@@ -132,7 +138,7 @@ export function LeadCapture({ result, auditId }: Props) {
         </div>
 
         <label className="block">
-          <span className="text-sm font-medium flex items-center gap-1">
+          <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
             <Mail className="w-3.5 h-3.5" aria-hidden="true" /> Email *
           </span>
           <input
@@ -141,35 +147,35 @@ export function LeadCapture({ result, auditId }: Props) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@company.com"
-            className="mt-1 block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-2"
+            className={inputClasses}
           />
         </label>
 
         <div className="grid sm:grid-cols-3 gap-3">
           <label className="block">
-            <span className="text-xs text-zinc-500 flex items-center gap-1">
+            <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400 flex items-center gap-1">
               <Building2 className="w-3 h-3" aria-hidden="true" /> Company
             </span>
             <input
               type="text"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-2 py-1.5 text-sm"
+              className={smallInputClasses}
             />
           </label>
           <label className="block">
-            <span className="text-xs text-zinc-500 flex items-center gap-1">
+            <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400 flex items-center gap-1">
               <Briefcase className="w-3 h-3" aria-hidden="true" /> Role
             </span>
             <input
               type="text"
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-2 py-1.5 text-sm"
+              className={smallInputClasses}
             />
           </label>
           <label className="block">
-            <span className="text-xs text-zinc-500 flex items-center gap-1">
+            <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400 flex items-center gap-1">
               <Users className="w-3 h-3" aria-hidden="true" /> Team size
             </span>
             <input
@@ -177,7 +183,7 @@ export function LeadCapture({ result, auditId }: Props) {
               min={1}
               value={teamSize}
               onChange={(e) => setTeamSize(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-2 py-1.5 text-sm"
+              className={smallInputClasses}
             />
           </label>
         </div>
@@ -185,11 +191,11 @@ export function LeadCapture({ result, auditId }: Props) {
         <button
           type="submit"
           disabled={status === "loading" || !email}
-          className="w-full rounded-md bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-4 py-2.5 font-medium hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+          className="w-full rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-4 py-3 font-semibold shadow-md shadow-zinc-900/10 dark:shadow-white/5 hover:bg-zinc-800 dark:hover:bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {status === "loading" ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" /> Sending…
+              <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" /> Sending...
             </>
           ) : (
             isHighSavings ? "Get report + book consultation" : "Email me my report"
@@ -197,7 +203,7 @@ export function LeadCapture({ result, auditId }: Props) {
         </button>
 
         {status === "error" && (
-          <p className="text-sm text-red-600 dark:text-red-400">
+          <p className="text-sm text-red-600 dark:text-red-400" role="alert">
             Something went wrong. Please try again in a moment.
           </p>
         )}
