@@ -34,40 +34,42 @@ const emptyTool = (): ToolInput => ({
   intensity: "regular",
 });
 
-export function AuditForm({ onSubmit, loading }: Props) {
-  const [teamSize, setTeamSize] = useState<number>(1);
-  const [useCase, setUseCase] = useState<UseCase>("coding");
-  const [tools, setTools] = useState<ToolInput[]>([emptyTool()]);
-  const [hydrated, setHydrated] = useState(false);
+function readStorage(): AuditInput | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw) as AuditInput;
+  } catch {
+    /* ignore */
+  }
+  return null;
+}
 
-  // Restore from localStorage on mount
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const saved = JSON.parse(raw) as AuditInput;
-        if (saved.teamSize) setTeamSize(saved.teamSize);
-        if (saved.useCase) setUseCase(saved.useCase);
-        if (Array.isArray(saved.tools) && saved.tools.length) setTools(saved.tools);
-      }
-    } catch {
-      /* ignore */
-    }
-    setHydrated(true);
-  }, []);
+export function AuditForm({ onSubmit, loading }: Props) {
+  const [formState, setFormState] = useState<AuditInput>(() => {
+    const stored = readStorage();
+    return {
+      teamSize: stored?.teamSize ?? 1,
+      useCase: stored?.useCase ?? "coding",
+      tools: stored?.tools?.length ? stored.tools : [emptyTool()],
+    };
+  });
+
+  const { teamSize, useCase, tools } = formState;
 
   // Persist on every change
   useEffect(() => {
-    if (!hydrated) return;
     try {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({ teamSize, useCase, tools } satisfies AuditInput),
-      );
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(formState));
     } catch {
       /* ignore */
     }
-  }, [teamSize, useCase, tools, hydrated]);
+  }, [formState]);
+
+  const setTeamSize = (n: number) => setFormState((s) => ({ ...s, teamSize: n }));
+  const setUseCase = (u: UseCase) => setFormState((s) => ({ ...s, useCase: u }));
+  const setTools = (fn: (t: ToolInput[]) => ToolInput[]) =>
+    setFormState((s) => ({ ...s, tools: fn(s.tools) }));
 
   const updateTool = (idx: number, patch: Partial<ToolInput>) => {
     setTools((curr) =>
@@ -123,14 +125,14 @@ export function AuditForm({ onSubmit, loading }: Props) {
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-medium uppercase tracking-wide text-zinc-500">
-            Tools you're paying for
+            Tools you&apos;re paying for
           </h3>
           <button
             type="button"
             onClick={addTool}
             className="inline-flex items-center gap-1 text-sm text-zinc-700 dark:text-zinc-300 hover:text-emerald-700 dark:hover:text-emerald-400"
           >
-            <Plus className="w-4 h-4" /> Add tool
+            <Plus className="w-4 h-4" aria-hidden="true" /> Add tool
           </button>
         </div>
 
@@ -224,7 +226,7 @@ export function AuditForm({ onSubmit, loading }: Props) {
                   className="col-span-2 sm:col-span-12 text-xs text-zinc-500 hover:text-red-600 inline-flex items-center gap-1 justify-self-end"
                   aria-label="Remove tool"
                 >
-                  <Trash2 className="w-3 h-3" /> Remove
+                  <Trash2 className="w-3 h-3" aria-hidden="true" /> Remove
                 </button>
               )}
             </div>
