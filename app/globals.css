@@ -10,6 +10,7 @@
   --accent: #059669;
   --accent-muted: #10b981;
   --surface: rgba(0, 0, 0, 0.02);
+  --heading: #18181b;
 }
 
 .dark {
@@ -22,6 +23,7 @@
   --accent: #10b981;
   --accent-muted: #059669;
   --surface: rgba(255, 255, 255, 0.03);
+  --heading: #ffffff;
 }
 
 @theme inline {
@@ -34,6 +36,7 @@
   --color-accent: var(--accent);
   --color-accent-muted: var(--accent-muted);
   --color-surface: var(--surface);
+  --color-heading: var(--heading);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -42,6 +45,8 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
@@ -89,12 +94,28 @@ input[type="number"]::-webkit-outer-spin-button {
   100% { background-position: 200% 0; }
 }
 
+@keyframes gradient-rotate {
+  0% { --gradient-angle: 0deg; }
+  100% { --gradient-angle: 360deg; }
+}
+
 .animate-fade-up {
   animation: fade-up 0.4s ease-out both;
 }
 
 .animate-shimmer {
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, var(--surface) 50%, transparent 100%);
   background-size: 200% 100%;
   animation: shimmer 2s ease-in-out infinite;
+}
+
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.animate-gradient-border {
+  animation: gradient-rotate 4s linear infinite;
+  border-image: conic-gradient(from var(--gradient-angle), var(--accent), transparent 30%, var(--accent)) 1;
 }

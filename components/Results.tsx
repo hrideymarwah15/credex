@@ -24,12 +24,14 @@ export function Results({ result, summary, onReset }: Props) {
     isOptimal,
   } = result;
 
+  const sortedFindings = [...findings].sort((a, b) => b.monthlySavings - a.monthlySavings);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Savings hero */}
       <section
         aria-label="Savings summary"
-        className="relative overflow-hidden rounded-xl border border-zinc-800 p-8 sm:p-10"
+        className="relative overflow-hidden rounded-2xl border border-border p-8 sm:p-10"
       >
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.07] via-transparent to-teal-500/[0.04]" aria-hidden="true" />
 
@@ -39,29 +41,29 @@ export function Results({ result, summary, onReset }: Props) {
               <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
               Optimized
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-heading">
               Your stack looks tight.
             </h2>
-            <p className="text-sm text-zinc-500 max-w-md leading-relaxed">
+            <p className="text-sm text-muted max-w-md leading-relaxed">
               Checked every tool against current pricing and team size. No overspend found.
             </p>
           </div>
         ) : (
-          <div className="relative space-y-3">
+          <div className="relative space-y-4">
             <div className="inline-flex items-center gap-1.5 text-emerald-400 text-xs font-medium">
               <TrendingDown className="w-3.5 h-3.5" aria-hidden="true" />
               Estimated savings
             </div>
             <div className="flex items-baseline gap-2">
-              <h2 className="text-5xl sm:text-6xl font-bold tracking-tighter text-white font-mono tabular-nums">
+              <h2 className="text-5xl sm:text-6xl font-bold tracking-tighter text-heading font-mono tabular-nums">
                 {formatUsd(totalMonthlySavings)}
               </h2>
-              <span className="text-lg text-zinc-600 font-normal">/mo</span>
+              <span className="text-lg text-muted/60 font-normal">/mo</span>
             </div>
-            <p className="text-sm text-zinc-400">
-              <span className="text-white font-medium">{formatUsd(totalAnnualSavings)}/yr</span>
-              <span className="text-zinc-600 mx-2">&middot;</span>
-              <span className="font-mono text-xs text-zinc-500">
+            <p className="text-sm text-foreground/70">
+              <span className="text-heading font-medium">{formatUsd(totalAnnualSavings)}/yr</span>
+              <span className="text-muted/40 mx-2">&middot;</span>
+              <span className="font-mono text-xs text-muted">
                 {formatUsd(totalCurrentMonthly)} &rarr; {formatUsd(totalRecommendedMonthly)}/mo
               </span>
             </p>
@@ -71,38 +73,38 @@ export function Results({ result, summary, onReset }: Props) {
 
       {/* AI summary */}
       {summary && (
-        <section className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-5 sm:p-6">
-          <h3 className="text-[11px] font-medium uppercase tracking-wider text-zinc-500 mb-3 flex items-center gap-1.5">
+        <section className="rounded-2xl border border-border bg-card/30 p-5 sm:p-6">
+          <h3 className="text-[11px] font-medium uppercase tracking-wider text-muted mb-3 flex items-center gap-1.5">
             <Sparkles className="w-3 h-3" aria-hidden="true" />
             Analysis
           </h3>
-          <p className="text-sm text-zinc-300 leading-relaxed whitespace-pre-line">
+          <p className="text-base text-foreground/80 leading-relaxed whitespace-pre-line">
             {summary}
           </p>
         </section>
       )}
 
       {/* Per-tool findings */}
-      <section aria-label="Per-tool breakdown" className="space-y-2">
-        <h3 className="text-[11px] font-medium uppercase tracking-wider text-zinc-500 mb-3">Breakdown</h3>
-        {findings.map((f, i) => {
+      <section aria-label="Per-tool breakdown" className="space-y-3">
+        <h3 className="text-[11px] font-medium uppercase tracking-wider text-muted mb-1">Breakdown</h3>
+        {sortedFindings.map((f, i) => {
           const config = severityConfig[f.severity];
           return (
             <div
               key={i}
-              className={`rounded-lg border ${config.border} ${config.bg} p-4`}
+              className={`rounded-xl border-l-[3px] ${config.accent} border ${config.border} ${config.bg} p-4 sm:p-5`}
             >
-              <div className="flex items-start justify-between gap-3">
-                <div className="space-y-1 flex-1 min-w-0">
+              <div className="flex items-start justify-between gap-4">
+                <div className="space-y-1.5 flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-white">{f.toolLabel}</span>
+                    <span className="text-sm font-semibold text-heading">{f.toolLabel}</span>
                     <SeverityBadge severity={f.severity} />
                   </div>
-                  <p className="text-xs text-zinc-300">{f.action}</p>
-                  <p className="text-[11px] text-zinc-500 leading-relaxed">{f.reason}</p>
+                  <p className="text-xs text-foreground/70">{f.action}</p>
+                  <p className="text-[11px] text-muted leading-relaxed">{f.reason}</p>
                 </div>
                 <div className="text-right shrink-0">
-                  <div className="text-[10px] text-zinc-600 font-mono">
+                  <div className="text-[10px] text-muted/60 font-mono">
                     {formatUsd(f.currentSpend)} &rarr; {formatUsd(f.recommendedSpend)}
                   </div>
                   {f.monthlySavings > 0 ? (
@@ -110,7 +112,7 @@ export function Results({ result, summary, onReset }: Props) {
                       -{formatUsd(f.monthlySavings)}
                     </div>
                   ) : (
-                    <div className="text-zinc-600 text-xs mt-1">No change</div>
+                    <div className="text-muted/60 text-xs mt-1">No change</div>
                   )}
                 </div>
               </div>
@@ -121,17 +123,17 @@ export function Results({ result, summary, onReset }: Props) {
 
       {/* Credex CTA */}
       {credexEligible && (
-        <section className="relative overflow-hidden rounded-xl border border-indigo-500/20 p-5 sm:p-6">
+        <section className="relative overflow-hidden rounded-2xl border border-indigo-500/20 p-5 sm:p-6">
           <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.06] via-transparent to-violet-500/[0.04]" aria-hidden="true" />
           <div className="relative flex items-start gap-3">
             <div className="shrink-0 w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center" aria-hidden="true">
               <AlertTriangle className="w-4 h-4 text-indigo-400" />
             </div>
             <div className="space-y-2">
-              <h3 className="font-semibold text-sm text-white">
+              <h3 className="font-semibold text-sm text-heading">
                 Qualifies for Credex consultation
               </h3>
-              <p className="text-xs text-zinc-400 leading-relaxed max-w-md">
+              <p className="text-xs text-muted leading-relaxed max-w-md">
                 Custom contracts and committed-use discounts save another 15-30% at this spend level.
               </p>
               <a
