@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, Building2, Briefcase, Users, Loader2, Check, Link2 } from "lucide-react";
+import { Mail, Building2, Briefcase, Users, Check, Link2, Lock } from "lucide-react";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
 import type { AuditResult } from "@/lib/audit/types";
 
 interface Props {
   result: AuditResult;
   auditId: string | null;
 }
-
-const inputBase = "block w-full rounded-md border border-zinc-800 bg-zinc-900/50 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 hover:border-zinc-700";
 
 export function LeadCapture({ result, auditId }: Props) {
   const [email, setEmail] = useState("");
@@ -77,7 +77,7 @@ export function LeadCapture({ result, auditId }: Props) {
         <p className="text-xs text-zinc-500 leading-relaxed">
           {isHighSavings
             ? "Full report sent. A Credex team member will reach out within 48 hours about additional savings."
-            : "Report sent. We&apos;ll notify you when new savings opportunities apply to your stack."}
+            : "Report sent. We\u2019ll notify you when new savings opportunities apply to your stack."}
         </p>
 
         {shareUrl && (
@@ -90,14 +90,10 @@ export function LeadCapture({ result, auditId }: Props) {
                 aria-label="Shareable audit URL"
                 className="flex-1 text-xs bg-zinc-900/50 border border-zinc-800 rounded-md px-2.5 py-1.5 text-zinc-500 font-mono truncate"
               />
-              <button
-                onClick={handleCopy}
-                aria-label="Copy share link"
-                className="shrink-0 inline-flex items-center gap-1 text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-3 py-1.5 rounded-md transition-colors"
-              >
+              <Button variant="secondary" size="sm" onClick={handleCopy}>
                 <Link2 className="w-3 h-3" aria-hidden="true" />
                 {copied ? "Copied" : "Copy"}
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -113,8 +109,8 @@ export function LeadCapture({ result, auditId }: Props) {
         </h3>
         <p className="text-xs text-zinc-500 mt-1 leading-relaxed">
           {isHighSavings
-            ? "We&apos;ll email the full report and connect you with our team for committed-use savings."
-            : "We&apos;ll email your report and notify you when new savings apply."}
+            ? "We\u2019ll email the full report and connect you with our team for committed-use savings."
+            : "We\u2019ll email your report and notify you when new savings apply."}
         </p>
       </div>
 
@@ -135,13 +131,12 @@ export function LeadCapture({ result, auditId }: Props) {
           <span className="text-[11px] font-medium text-zinc-500 flex items-center gap-1 mb-1">
             <Mail className="w-3 h-3" aria-hidden="true" /> Email
           </span>
-          <input
+          <Input
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@company.com"
-            className={`${inputBase} px-3 py-2`}
           />
         </label>
 
@@ -150,51 +145,54 @@ export function LeadCapture({ result, auditId }: Props) {
             <span className="text-[10px] font-medium text-zinc-600 flex items-center gap-1 mb-1">
               <Building2 className="w-2.5 h-2.5" aria-hidden="true" /> Company
             </span>
-            <input
+            <Input
               type="text"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              className={`${inputBase} px-2.5 py-1.5 text-xs`}
+              inputSize="sm"
             />
           </label>
           <label className="block">
             <span className="text-[10px] font-medium text-zinc-600 flex items-center gap-1 mb-1">
               <Briefcase className="w-2.5 h-2.5" aria-hidden="true" /> Role
             </span>
-            <input
+            <Input
               type="text"
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className={`${inputBase} px-2.5 py-1.5 text-xs`}
+              inputSize="sm"
             />
           </label>
           <label className="block">
             <span className="text-[10px] font-medium text-zinc-600 flex items-center gap-1 mb-1">
               <Users className="w-2.5 h-2.5" aria-hidden="true" /> Team
             </span>
-            <input
+            <Input
               type="number"
               min={1}
               value={teamSize}
               onChange={(e) => setTeamSize(e.target.value)}
-              className={`${inputBase} px-2.5 py-1.5 text-xs`}
+              inputSize="sm"
             />
           </label>
         </div>
 
-        <button
+        <div className="flex items-center gap-1.5 text-[10px] text-zinc-600">
+          <Lock className="w-2.5 h-2.5" aria-hidden="true" />
+          We never share your data.
+        </div>
+
+        <Button
           type="submit"
-          disabled={status === "loading" || !email}
-          className="w-full rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2.5 text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors"
+          variant="secondary"
+          loading={status === "loading"}
+          disabled={!email}
+          className="w-full"
         >
-          {status === "loading" ? (
-            <>
-              <Loader2 className="w-3.5 h-3.5 animate-spin" aria-hidden="true" /> Sending...
-            </>
-          ) : (
-            isHighSavings ? "Get report + consultation" : "Email my report"
-          )}
-        </button>
+          {status === "loading"
+            ? "Sending..."
+            : isHighSavings ? "Get report + consultation" : "Email my report"}
+        </Button>
 
         {status === "error" && (
           <p className="text-xs text-red-400" role="alert">

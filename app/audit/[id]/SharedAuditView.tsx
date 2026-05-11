@@ -1,6 +1,8 @@
 "use client";
 
 import type { AuditResult } from "@/lib/audit/types";
+import { severityConfig } from "@/lib/audit/severity";
+import { SeverityBadge } from "@/components/ui/Badge";
 import { formatUsd } from "@/lib/utils";
 import { TrendingDown, CheckCircle2, ArrowRight, AlertTriangle, Sparkles } from "lucide-react";
 
@@ -8,37 +10,6 @@ interface Props {
   result: AuditResult;
   summary: string | null;
 }
-
-const severityConfig: Record<string, { border: string; bg: string; badge: string; badgeText: string; label: string }> = {
-  save_big: {
-    border: "border-emerald-500/20",
-    bg: "bg-emerald-500/[0.03]",
-    badge: "bg-emerald-500/10 border-emerald-500/20",
-    badgeText: "text-emerald-400",
-    label: "High savings",
-  },
-  save_some: {
-    border: "border-amber-500/20",
-    bg: "bg-amber-500/[0.03]",
-    badge: "bg-amber-500/10 border-amber-500/20",
-    badgeText: "text-amber-400",
-    label: "Some savings",
-  },
-  optimal: {
-    border: "border-zinc-800",
-    bg: "bg-zinc-900/30",
-    badge: "bg-zinc-800 border-zinc-700",
-    badgeText: "text-zinc-400",
-    label: "Optimal",
-  },
-  underpaying: {
-    border: "border-red-500/20",
-    bg: "bg-red-500/[0.03]",
-    badge: "bg-red-500/10 border-red-500/20",
-    badgeText: "text-red-400",
-    label: "Heads up",
-  },
-};
 
 export function SharedAuditView({ result, summary }: Props) {
   const { findings, totalMonthlySavings, totalAnnualSavings, totalCurrentMonthly, totalRecommendedMonthly, credexEligible, isOptimal } = result;
@@ -115,9 +86,7 @@ export function SharedAuditView({ result, summary }: Props) {
                 <div className="space-y-1 flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-semibold text-white">{f.toolLabel}</span>
-                    <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded border ${config.badge} ${config.badgeText}`}>
-                      {config.label}
-                    </span>
+                    <SeverityBadge severity={f.severity} />
                   </div>
                   <p className="text-xs text-zinc-300">{f.action}</p>
                   <p className="text-[11px] text-zinc-500 leading-relaxed">{f.reason}</p>
