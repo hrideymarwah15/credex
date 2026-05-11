@@ -1,9 +1,12 @@
 "use client";
 
+import { motion } from "motion/react";
 import type { AuditResult } from "@/lib/audit/types";
 import { severityConfig } from "@/lib/audit/severity";
 import { SeverityBadge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
+import { FadeIn } from "@/components/ui/FadeIn";
 import { formatUsd } from "@/lib/utils";
 import { ArrowRight, CheckCircle2, TrendingDown, AlertTriangle, Sparkles, ArrowLeft } from "lucide-react";
 
@@ -12,6 +15,15 @@ interface Props {
   summary?: string | null;
   onReset: () => void;
 }
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 8 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: 0.3 + i * 0.06, duration: 0.4, ease: [0.16, 1, 0.3, 1] as const },
+  }),
+};
 
 export function Results({ result, summary, onReset }: Props) {
   const {
@@ -29,130 +41,145 @@ export function Results({ result, summary, onReset }: Props) {
   return (
     <div className="space-y-8">
       {/* Savings hero */}
-      <section
-        aria-label="Savings summary"
-        className="relative overflow-hidden rounded-2xl border border-border p-8 sm:p-10"
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.07] via-transparent to-teal-500/[0.04]" aria-hidden="true" />
+      <FadeIn>
+        <section
+          aria-label="Savings summary"
+          className="relative overflow-hidden rounded-2xl border border-border p-8 sm:p-10"
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.07] via-transparent to-teal-500/[0.04]" aria-hidden="true" />
 
-        {isOptimal ? (
-          <div className="relative space-y-3">
-            <div className="inline-flex items-center gap-1.5 text-emerald-400 text-xs font-medium">
-              <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
-              Optimized
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-heading">
-              Your stack looks tight.
-            </h2>
-            <p className="text-sm text-muted max-w-md leading-relaxed">
-              Checked every tool against current pricing and team size. No overspend found.
-            </p>
-          </div>
-        ) : (
-          <div className="relative space-y-4">
-            <div className="inline-flex items-center gap-1.5 text-emerald-400 text-xs font-medium">
-              <TrendingDown className="w-3.5 h-3.5" aria-hidden="true" />
-              Estimated savings
-            </div>
-            <div className="flex items-baseline gap-2">
-              <h2 className="text-5xl sm:text-6xl font-bold tracking-tighter text-heading font-mono tabular-nums">
-                {formatUsd(totalMonthlySavings)}
+          {isOptimal ? (
+            <div className="relative space-y-3">
+              <div className="inline-flex items-center gap-1.5 text-emerald-400 text-xs font-medium">
+                <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />
+                Optimized
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-heading">
+                Your stack looks tight.
               </h2>
-              <span className="text-lg text-muted/60 font-normal">/mo</span>
+              <p className="text-sm text-muted max-w-md leading-relaxed">
+                Checked every tool against current pricing and team size. No overspend found.
+              </p>
             </div>
-            <p className="text-sm text-foreground/70">
-              <span className="text-heading font-medium">{formatUsd(totalAnnualSavings)}/yr</span>
-              <span className="text-muted/40 mx-2">&middot;</span>
-              <span className="font-mono text-xs text-muted">
-                {formatUsd(totalCurrentMonthly)} &rarr; {formatUsd(totalRecommendedMonthly)}/mo
-              </span>
-            </p>
-          </div>
-        )}
-      </section>
+          ) : (
+            <div className="relative space-y-4">
+              <div className="inline-flex items-center gap-1.5 text-emerald-400 text-xs font-medium">
+                <TrendingDown className="w-3.5 h-3.5" aria-hidden="true" />
+                Estimated savings
+              </div>
+              <div className="flex items-baseline gap-2">
+                <AnimatedCounter
+                  value={totalMonthlySavings}
+                  className="text-5xl sm:text-6xl font-bold tracking-tighter text-heading font-mono tabular-nums"
+                />
+                <span className="text-lg text-muted/60 font-normal">/mo</span>
+              </div>
+              <p className="text-sm text-foreground/70">
+                <span className="text-heading font-medium">{formatUsd(totalAnnualSavings)}/yr</span>
+                <span className="text-muted/40 mx-2">&middot;</span>
+                <span className="font-mono text-xs text-muted">
+                  {formatUsd(totalCurrentMonthly)} &rarr; {formatUsd(totalRecommendedMonthly)}/mo
+                </span>
+              </p>
+            </div>
+          )}
+        </section>
+      </FadeIn>
 
       {/* AI summary */}
       {summary && (
-        <section className="rounded-2xl border border-border bg-card/30 p-5 sm:p-6">
-          <h3 className="text-[11px] font-medium uppercase tracking-wider text-muted mb-3 flex items-center gap-1.5">
-            <Sparkles className="w-3 h-3" aria-hidden="true" />
-            Analysis
-          </h3>
-          <p className="text-base text-foreground/80 leading-relaxed whitespace-pre-line">
-            {summary}
-          </p>
-        </section>
+        <FadeIn delay={0.15}>
+          <section className="rounded-2xl border border-border bg-card/30 p-5 sm:p-6">
+            <h3 className="text-[11px] font-medium uppercase tracking-wider text-muted mb-3 flex items-center gap-1.5">
+              <Sparkles className="w-3 h-3" aria-hidden="true" />
+              Analysis
+            </h3>
+            <p className="text-base text-foreground/80 leading-relaxed whitespace-pre-line">
+              {summary}
+            </p>
+          </section>
+        </FadeIn>
       )}
 
       {/* Per-tool findings */}
-      <section aria-label="Per-tool breakdown" className="space-y-3">
-        <h3 className="text-[11px] font-medium uppercase tracking-wider text-muted mb-1">Breakdown</h3>
-        {sortedFindings.map((f, i) => {
-          const config = severityConfig[f.severity];
-          return (
-            <div
-              key={i}
-              className={`rounded-xl border-l-[3px] ${config.accent} border ${config.border} ${config.bg} p-4 sm:p-5`}
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="space-y-1.5 flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-heading">{f.toolLabel}</span>
-                    <SeverityBadge severity={f.severity} />
-                  </div>
-                  <p className="text-xs text-foreground/70">{f.action}</p>
-                  <p className="text-[11px] text-muted leading-relaxed">{f.reason}</p>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="text-[10px] text-muted/60 font-mono">
-                    {formatUsd(f.currentSpend)} &rarr; {formatUsd(f.recommendedSpend)}
-                  </div>
-                  {f.monthlySavings > 0 ? (
-                    <div className="text-emerald-400 font-bold text-lg font-mono tabular-nums mt-0.5">
-                      -{formatUsd(f.monthlySavings)}
+      <FadeIn delay={0.2}>
+        <section aria-label="Per-tool breakdown" className="space-y-3">
+          <h3 className="text-[11px] font-medium uppercase tracking-wider text-muted mb-1">Breakdown</h3>
+          {sortedFindings.map((f, i) => {
+            const config = severityConfig[f.severity];
+            return (
+              <motion.div
+                key={i}
+                custom={i}
+                initial="hidden"
+                animate="visible"
+                variants={cardVariants}
+                className={`rounded-xl border-l-[3px] ${config.accent} border ${config.border} ${config.bg} p-4 sm:p-5`}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-1.5 flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-semibold text-heading">{f.toolLabel}</span>
+                      <SeverityBadge severity={f.severity} />
                     </div>
-                  ) : (
-                    <div className="text-muted/60 text-xs mt-1">No change</div>
-                  )}
+                    <p className="text-xs text-foreground/70">{f.action}</p>
+                    <p className="text-[11px] text-muted leading-relaxed">{f.reason}</p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <div className="text-[10px] text-muted/60 font-mono">
+                      {formatUsd(f.currentSpend)} &rarr; {formatUsd(f.recommendedSpend)}
+                    </div>
+                    {f.monthlySavings > 0 ? (
+                      <div className="text-emerald-400 font-bold text-lg font-mono tabular-nums mt-0.5">
+                        -{formatUsd(f.monthlySavings)}
+                      </div>
+                    ) : (
+                      <div className="text-muted/60 text-xs mt-1">No change</div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </div>
-          );
-        })}
-      </section>
+              </motion.div>
+            );
+          })}
+        </section>
+      </FadeIn>
 
       {/* Credex CTA */}
       {credexEligible && (
-        <section className="relative overflow-hidden rounded-2xl border border-indigo-500/20 p-5 sm:p-6">
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.06] via-transparent to-violet-500/[0.04]" aria-hidden="true" />
-          <div className="relative flex items-start gap-3">
-            <div className="shrink-0 w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center" aria-hidden="true">
-              <AlertTriangle className="w-4 h-4 text-indigo-400" />
+        <FadeIn delay={0.35}>
+          <section className="relative overflow-hidden rounded-2xl border border-indigo-500/20 p-5 sm:p-6">
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.06] via-transparent to-violet-500/[0.04]" aria-hidden="true" />
+            <div className="relative flex items-start gap-3">
+              <div className="shrink-0 w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center" aria-hidden="true">
+                <AlertTriangle className="w-4 h-4 text-indigo-400" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="font-semibold text-sm text-heading">
+                  Qualifies for Credex consultation
+                </h3>
+                <p className="text-xs text-muted leading-relaxed max-w-md">
+                  Custom contracts and committed-use discounts save another 15-30% at this spend level.
+                </p>
+                <a
+                  href="https://credex.ai/consultation"
+                  target="_blank"
+                  rel="noopener"
+                  className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
+                >
+                  Learn more <ArrowRight className="w-3 h-3" aria-hidden="true" />
+                </a>
+              </div>
             </div>
-            <div className="space-y-2">
-              <h3 className="font-semibold text-sm text-heading">
-                Qualifies for Credex consultation
-              </h3>
-              <p className="text-xs text-muted leading-relaxed max-w-md">
-                Custom contracts and committed-use discounts save another 15-30% at this spend level.
-              </p>
-              <a
-                href="https://credex.ai/consultation"
-                target="_blank"
-                rel="noopener"
-                className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
-              >
-                Learn more <ArrowRight className="w-3 h-3" aria-hidden="true" />
-              </a>
-            </div>
-          </div>
-        </section>
+          </section>
+        </FadeIn>
       )}
 
-      <Button variant="ghost" size="sm" onClick={onReset}>
-        <ArrowLeft className="w-3 h-3" aria-hidden="true" />
-        New audit
-      </Button>
+      <FadeIn delay={0.4}>
+        <Button variant="ghost" size="sm" onClick={onReset}>
+          <ArrowLeft className="w-3 h-3" aria-hidden="true" />
+          New audit
+        </Button>
+      </FadeIn>
     </div>
   );
 }

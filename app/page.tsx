@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { AuditForm } from "@/components/AuditForm";
 import { Results } from "@/components/Results";
 import { LeadCapture } from "@/components/LeadCapture";
@@ -63,16 +64,31 @@ export default function Home() {
 
   return (
     <PageShell subtitle="Tell us what you pay. Get a free, instant breakdown of where to cut — backed by current vendor pricing.">
-      {result ? (
-        <div className="space-y-8 animate-fade-up">
-          <Results result={result} summary={summary} onReset={reset} />
-          <LeadCapture result={result} auditId={auditId} />
-        </div>
-      ) : (
-        <div className="animate-fade-up">
-          <AuditForm onSubmit={handleAudit} loading={loading} />
-        </div>
-      )}
+      <AnimatePresence mode="wait">
+        {result ? (
+          <motion.div
+            key="results"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-8"
+          >
+            <Results result={result} summary={summary} onReset={reset} />
+            <LeadCapture result={result} auditId={auditId} />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="form"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <AuditForm onSubmit={handleAudit} loading={loading} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </PageShell>
   );
 }
