@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AuditForm } from "@/components/AuditForm";
 import { Results } from "@/components/Results";
 import { LeadCapture } from "@/components/LeadCapture";
+import { PageShell } from "@/components/layout/PageShell";
 import { runAudit } from "@/lib/audit/engine";
 import type { AuditInput, AuditResult } from "@/lib/audit/types";
 
@@ -61,22 +62,7 @@ export default function Home() {
   };
 
   return (
-    <main className="mx-auto w-full max-w-2xl px-5 py-16 sm:py-24 flex-1">
-      {/* Header */}
-      <header className="mb-14">
-        <div className="inline-flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/80 px-3 py-1 mb-6">
-          <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
-          <span className="text-[11px] font-medium tracking-wide text-zinc-400 uppercase">SpendLens</span>
-        </div>
-        <h1 className="text-[2.5rem] sm:text-5xl font-bold tracking-tight leading-[1.08] text-white">
-          Stop overpaying for<br className="hidden sm:block" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400"> AI tools.</span>
-        </h1>
-        <p className="mt-5 text-base text-zinc-500 max-w-md leading-relaxed">
-          Tell us what you pay. Get a free, instant breakdown of where to cut — backed by current vendor pricing.
-        </p>
-      </header>
-
+    <PageShell subtitle="Tell us what you pay. Get a free, instant breakdown of where to cut — backed by current vendor pricing.">
       {result ? (
         <div className="space-y-8 animate-fade-up">
           <Results result={result} summary={summary} onReset={reset} />
@@ -87,11 +73,6 @@ export default function Home() {
           <AuditForm onSubmit={handleAudit} loading={loading} />
         </div>
       )}
-
-      <footer className="mt-24 flex items-center gap-3 text-[11px] text-zinc-600 border-t border-zinc-800/50 pt-6">
-        <div className="h-1 w-1 rounded-full bg-zinc-700" aria-hidden="true" />
-        Pricing verified May 2026. Not affiliated with listed tools.
-      </footer>
-    </main>
+    </PageShell>
   );
 }

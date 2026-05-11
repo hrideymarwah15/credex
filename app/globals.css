@@ -1,6 +1,18 @@
 @import "tailwindcss";
 
 :root {
+  --background: #fafafa;
+  --foreground: #09090b;
+  --muted: #71717a;
+  --border: #e4e4e7;
+  --card: #ffffff;
+  --card-hover: #f4f4f5;
+  --accent: #059669;
+  --accent-muted: #10b981;
+  --surface: rgba(0, 0, 0, 0.02);
+}
+
+.dark {
   --background: #09090b;
   --foreground: #fafafa;
   --muted: #a1a1aa;
@@ -34,7 +46,7 @@ body {
 
 ::selection {
   background: rgba(16, 185, 129, 0.25);
-  color: #fafafa;
+  color: var(--foreground);
 }
 
 input, select, button, a {
@@ -54,11 +66,11 @@ input:focus-visible, select:focus-visible, button:focus-visible {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
+  background: var(--border);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
+  background: var(--muted);
 }
 
 /* Number input arrows */

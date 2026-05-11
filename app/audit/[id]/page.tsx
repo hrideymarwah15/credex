@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SharedAuditView } from "./SharedAuditView";
+import { PageShell } from "@/components/layout/PageShell";
 import type { AuditResult } from "@/lib/audit/types";
 
 interface Props {
@@ -68,24 +69,24 @@ export default async function AuditPage({ params }: Props) {
   const summary = audit.summary as string | null;
 
   return (
-    <main className="mx-auto max-w-2xl px-5 py-16 sm:py-24 flex-1 w-full">
-      <header className="mb-14">
-        <div className="inline-flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/80 px-3 py-1 mb-6">
-          <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
-          <span className="text-[11px] font-medium tracking-wide text-zinc-400 uppercase">SpendLens</span>
-        </div>
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
-          AI Spend Audit
-        </h1>
-        <p className="mt-3 text-sm text-zinc-500 max-w-md leading-relaxed">
-          Shared audit results — identifying details stripped.
-        </p>
-      </header>
-
+    <PageShell
+      title="AI Spend Audit"
+      subtitle="Shared audit results — identifying details stripped."
+      headerContent={
+        <>
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+            AI Spend Audit
+          </h1>
+          <p className="mt-3 text-sm text-muted max-w-md leading-relaxed">
+            Shared audit results — identifying details stripped.
+          </p>
+        </>
+      }
+    >
       <SharedAuditView result={result} summary={summary} />
 
-      <div className="mt-10 rounded-xl border border-zinc-800 bg-zinc-900/30 p-6 text-center">
-        <p className="text-sm text-zinc-400 mb-4">
+      <div className="mt-10 rounded-xl border border-border bg-card/30 p-6 text-center">
+        <p className="text-sm text-muted mb-4">
           Want to audit your own AI tool spend?
         </p>
         <Link
@@ -95,11 +96,6 @@ export default async function AuditPage({ params }: Props) {
           Run your free audit
         </Link>
       </div>
-
-      <footer className="mt-24 flex items-center gap-3 text-[11px] text-zinc-600 border-t border-zinc-800/50 pt-6">
-        <div className="h-1 w-1 rounded-full bg-zinc-700" aria-hidden="true" />
-        Pricing verified May 2026. Not affiliated with listed tools.
-      </footer>
-    </main>
+    </PageShell>
   );
 }

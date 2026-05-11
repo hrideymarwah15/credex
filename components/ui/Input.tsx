@@ -2,7 +2,7 @@ import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
 const baseStyles =
-  "block w-full rounded-md border border-zinc-800 bg-zinc-900/50 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 hover:border-zinc-700 transition-colors";
+  "block w-full rounded-md border border-border bg-card/50 text-sm text-foreground placeholder:text-muted/60 focus:border-accent/50 focus:ring-1 focus:ring-accent/20 hover:border-muted/40 transition-colors";
 
 type InputSize = "sm" | "md";
 
@@ -55,8 +55,8 @@ interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
 
 export function Label({ className, size = "md", children, ...props }: LabelProps) {
   const sizeClass = size === "sm"
-    ? "text-[10px] text-zinc-600"
-    : "text-[11px] text-zinc-500";
+    ? "text-[10px] text-muted/70"
+    : "text-[11px] text-muted";
 
   return (
     <label className={cn("block", className)} {...props}>
