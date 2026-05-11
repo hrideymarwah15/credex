@@ -22,7 +22,6 @@ export default function Home() {
 
     let aiSummary: string | null = null;
 
-    // Fetch AI summary
     try {
       const res = await fetch("/api/summarize", {
         method: "POST",
@@ -38,7 +37,6 @@ export default function Home() {
       /* results show without summary */
     }
 
-    // Save audit to get shareable ID
     try {
       const res = await fetch("/api/audit/save", {
         method: "POST",
@@ -63,39 +61,36 @@ export default function Home() {
   };
 
   return (
-    <main className="mx-auto max-w-3xl px-5 py-14 sm:py-20 flex-1 w-full">
-      <header className="mb-12">
-        <nav aria-label="Site">
-          <div className="text-xs font-semibold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-3">
-            SpendLens
-          </div>
-        </nav>
-        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1]">
-          Audit your AI tool spend<br className="hidden sm:block" /> in 90 seconds.
+    <main className="mx-auto w-full max-w-2xl px-5 py-16 sm:py-24 flex-1">
+      {/* Header */}
+      <header className="mb-14">
+        <div className="inline-flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/80 px-3 py-1 mb-6">
+          <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
+          <span className="text-[11px] font-medium tracking-wide text-zinc-400 uppercase">SpendLens</span>
+        </div>
+        <h1 className="text-[2.5rem] sm:text-5xl font-bold tracking-tight leading-[1.08] text-white">
+          Stop overpaying for<br className="hidden sm:block" />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400"> AI tools.</span>
         </h1>
-        <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400 max-w-xl leading-relaxed">
-          Free. No login. Tell us what you pay, get a defensible breakdown of where
-          you&apos;re overpaying — with current pricing as of May 2026.
+        <p className="mt-5 text-base text-zinc-500 max-w-md leading-relaxed">
+          Tell us what you pay. Get a free, instant breakdown of where to cut — backed by current vendor pricing.
         </p>
       </header>
 
       {result ? (
-        <section aria-label="Audit results" className="space-y-10">
+        <div className="space-y-8 animate-fade-up">
           <Results result={result} summary={summary} onReset={reset} />
-          <LeadCapture
-            result={result}
-            auditId={auditId}
-          />
-        </section>
+          <LeadCapture result={result} auditId={auditId} />
+        </div>
       ) : (
-        <section aria-label="Audit input">
+        <div className="animate-fade-up">
           <AuditForm onSubmit={handleAudit} loading={loading} />
-        </section>
+        </div>
       )}
 
-      <footer className="mt-20 text-xs text-zinc-400 dark:text-zinc-600 border-t border-zinc-200 dark:border-zinc-800 pt-6">
-        Built for the Credex internship. Pricing verified against vendor sites on
-        2026-05-07. Not affiliated with the tools listed.
+      <footer className="mt-24 flex items-center gap-3 text-[11px] text-zinc-600 border-t border-zinc-800/50 pt-6">
+        <div className="h-1 w-1 rounded-full bg-zinc-700" aria-hidden="true" />
+        Pricing verified May 2026. Not affiliated with listed tools.
       </footer>
     </main>
   );

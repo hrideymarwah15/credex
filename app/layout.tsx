@@ -17,10 +17,7 @@ const geistMono = Geist_Mono({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
-  ],
+  themeColor: "#09090b",
 };
 
 export const metadata: Metadata = {
@@ -39,7 +36,12 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-[#09090b] text-zinc-100">
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(16,185,129,0.05)_0%,_transparent_50%)] pointer-events-none" aria-hidden="true" />
+        <div className="relative z-10 flex flex-col min-h-full">
+          {children}
+        </div>
+      </body>
     </html>
   );
 }

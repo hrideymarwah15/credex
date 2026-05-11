@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { TOOLS } from "@/lib/audit/pricing";
 import type { AuditInput, ToolId, ToolInput, UseCase, Intensity } from "@/lib/audit/types";
-import { Plus, Trash2, Zap } from "lucide-react";
+import { Plus, X, Zap } from "lucide-react";
 
 const STORAGE_KEY = "spendlens:form:v1";
 
@@ -16,7 +16,7 @@ const USE_CASES: { id: UseCase; label: string }[] = [
 ];
 
 const INTENSITIES: { id: Intensity; label: string }[] = [
-  { id: "occasional", label: "Occasional" },
+  { id: "occasional", label: "Light" },
   { id: "regular", label: "Regular" },
   { id: "heavy", label: "Heavy" },
 ];
@@ -45,9 +45,7 @@ function readStorage(): AuditInput | null {
   return null;
 }
 
-const inputClasses = "mt-1 block w-full rounded-lg border border-zinc-200 dark:border-zinc-700/80 bg-white dark:bg-zinc-900 px-3 py-2 text-sm shadow-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-600 focus:border-emerald-500 dark:focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20";
-
-const smallInputClasses = "mt-1 block w-full rounded-lg border border-zinc-200 dark:border-zinc-700/80 bg-white dark:bg-zinc-900 px-2.5 py-1.5 text-sm shadow-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-600 focus:border-emerald-500 dark:focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20";
+const inputBase = "block w-full rounded-md border border-zinc-800 bg-zinc-900/50 text-sm text-zinc-200 placeholder:text-zinc-600 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 hover:border-zinc-700";
 
 export function AuditForm({ onSubmit, loading }: Props) {
   const [formState, setFormState] = useState<AuditInput>(() => {
@@ -61,7 +59,6 @@ export function AuditForm({ onSubmit, loading }: Props) {
 
   const { teamSize, useCase, tools } = formState;
 
-  // Persist on every change
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(formState));
@@ -96,25 +93,25 @@ export function AuditForm({ onSubmit, loading }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8" aria-label="AI tool spend audit form">
-      {/* Team meta */}
-      <div className="grid sm:grid-cols-2 gap-5">
+    <form onSubmit={handleSubmit} className="space-y-6" aria-label="AI tool spend audit form">
+      {/* Context row */}
+      <div className="grid grid-cols-2 gap-3">
         <label className="block">
-          <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Team size</span>
+          <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500 mb-1.5 block">Team size</span>
           <input
             type="number"
             min={1}
             value={teamSize}
             onChange={(e) => setTeamSize(Math.max(1, Number(e.target.value) || 1))}
-            className={inputClasses}
+            className={`${inputBase} px-3 py-2`}
           />
         </label>
         <label className="block">
-          <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Primary use case</span>
+          <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500 mb-1.5 block">Use case</span>
           <select
             value={useCase}
             onChange={(e) => setUseCase(e.target.value as UseCase)}
-            className={inputClasses}
+            className={`${inputBase} px-3 py-2`}
           >
             {USE_CASES.map((u) => (
               <option key={u.id} value={u.id}>
@@ -125,18 +122,16 @@ export function AuditForm({ onSubmit, loading }: Props) {
         </label>
       </div>
 
-      {/* Tools */}
-      <div className="space-y-4">
+      {/* Tool rows */}
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            Tools you&apos;re paying for
-          </h3>
+          <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">Your tools</span>
           <button
             type="button"
             onClick={addTool}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-emerald-700 dark:hover:text-emerald-400 px-2.5 py-1 rounded-md hover:bg-emerald-50 dark:hover:bg-emerald-950/30"
+            className="inline-flex items-center gap-1 text-[11px] font-medium text-zinc-500 hover:text-emerald-400 uppercase tracking-wider transition-colors"
           >
-            <Plus className="w-4 h-4" aria-hidden="true" /> Add tool
+            <Plus className="w-3 h-3" aria-hidden="true" /> Add
           </button>
         </div>
 
@@ -145,94 +140,97 @@ export function AuditForm({ onSubmit, loading }: Props) {
           return (
             <div
               key={idx}
-              className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/40 p-4 sm:p-5 grid grid-cols-2 sm:grid-cols-12 gap-3 shadow-sm hover:shadow-md hover:border-zinc-300 dark:hover:border-zinc-700"
+              className="group relative rounded-lg border border-zinc-800 bg-zinc-900/30 p-3 sm:p-4 hover:border-zinc-700 transition-colors"
             >
-              <label className="col-span-2 sm:col-span-3">
-                <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Tool</span>
-                <select
-                  value={t.tool}
-                  onChange={(e) => handleToolChange(idx, e.target.value as ToolId)}
-                  className={smallInputClasses}
-                >
-                  {Object.values(TOOLS).map((tool) => (
-                    <option key={tool.id} value={tool.id}>
-                      {tool.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+                <label className="col-span-1 sm:col-span-1">
+                  <span className="text-[10px] font-medium text-zinc-600 mb-1 block">Tool</span>
+                  <select
+                    value={t.tool}
+                    onChange={(e) => handleToolChange(idx, e.target.value as ToolId)}
+                    className={`${inputBase} px-2 py-1.5 text-xs`}
+                  >
+                    {Object.values(TOOLS).map((tool) => (
+                      <option key={tool.id} value={tool.id}>
+                        {tool.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
 
-              <label className="col-span-2 sm:col-span-3">
-                <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Plan</span>
-                <select
-                  value={t.plan}
-                  onChange={(e) => updateTool(idx, { plan: e.target.value })}
-                  className={smallInputClasses}
-                >
-                  {meta.plans.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
+                <label className="col-span-1 sm:col-span-1">
+                  <span className="text-[10px] font-medium text-zinc-600 mb-1 block">Plan</span>
+                  <select
+                    value={t.plan}
+                    onChange={(e) => updateTool(idx, { plan: e.target.value })}
+                    className={`${inputBase} px-2 py-1.5 text-xs`}
+                  >
+                    {meta.plans.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
 
-              <label className="col-span-1 sm:col-span-2">
-                <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Seats</span>
-                <input
-                  type="number"
-                  min={1}
-                  value={t.seats}
-                  onChange={(e) =>
-                    updateTool(idx, { seats: Math.max(1, Number(e.target.value) || 1) })
-                  }
-                  className={smallInputClasses}
-                />
-              </label>
+                <label className="col-span-1 sm:col-span-1">
+                  <span className="text-[10px] font-medium text-zinc-600 mb-1 block">Seats</span>
+                  <input
+                    type="number"
+                    min={1}
+                    value={t.seats}
+                    onChange={(e) =>
+                      updateTool(idx, { seats: Math.max(1, Number(e.target.value) || 1) })
+                    }
+                    className={`${inputBase} px-2 py-1.5 text-xs`}
+                  />
+                </label>
 
-              <label className="col-span-1 sm:col-span-2">
-                <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">$/mo</span>
-                <input
-                  type="number"
-                  min={0}
-                  step={1}
-                  value={t.monthlySpend}
-                  onChange={(e) =>
-                    updateTool(idx, {
-                      monthlySpend: Math.max(0, Number(e.target.value) || 0),
-                    })
-                  }
-                  className={smallInputClasses}
-                />
-              </label>
+                <label className="col-span-1 sm:col-span-1">
+                  <span className="text-[10px] font-medium text-zinc-600 mb-1 block">$/mo</span>
+                  <input
+                    type="number"
+                    min={0}
+                    step={1}
+                    value={t.monthlySpend}
+                    onChange={(e) =>
+                      updateTool(idx, {
+                        monthlySpend: Math.max(0, Number(e.target.value) || 0),
+                      })
+                    }
+                    className={`${inputBase} px-2 py-1.5 text-xs font-mono`}
+                  />
+                </label>
 
-              <label className="col-span-2 sm:col-span-2">
-                <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Usage</span>
-                <select
-                  value={t.intensity ?? "regular"}
-                  onChange={(e) =>
-                    updateTool(idx, { intensity: e.target.value as Intensity })
-                  }
-                  className={smallInputClasses}
-                >
-                  {INTENSITIES.map((i) => (
-                    <option key={i.id} value={i.id}>
-                      {i.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              {tools.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removeTool(idx)}
-                  className="col-span-2 sm:col-span-12 text-xs text-zinc-400 dark:text-zinc-600 hover:text-red-600 dark:hover:text-red-400 inline-flex items-center gap-1 justify-self-end px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-950/20"
-                  aria-label={`Remove tool ${idx + 1}`}
-                >
-                  <Trash2 className="w-3 h-3" aria-hidden="true" /> Remove
-                </button>
-              )}
+                <div className="col-span-2 sm:col-span-1 flex items-end gap-2">
+                  <label className="flex-1">
+                    <span className="text-[10px] font-medium text-zinc-600 mb-1 block">Usage</span>
+                    <select
+                      value={t.intensity ?? "regular"}
+                      onChange={(e) =>
+                        updateTool(idx, { intensity: e.target.value as Intensity })
+                      }
+                      className={`${inputBase} px-2 py-1.5 text-xs`}
+                    >
+                      {INTENSITIES.map((i) => (
+                        <option key={i.id} value={i.id}>
+                          {i.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  {tools.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeTool(idx)}
+                      className="mb-0.5 p-1.5 rounded text-zinc-600 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                      aria-label={`Remove tool ${idx + 1}`}
+                    >
+                      <X className="w-3.5 h-3.5" aria-hidden="true" />
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
           );
         })}
@@ -241,17 +239,17 @@ export function AuditForm({ onSubmit, loading }: Props) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-8 py-3.5 font-semibold text-base shadow-md shadow-zinc-900/10 dark:shadow-white/5 hover:bg-zinc-800 dark:hover:bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 text-sm font-semibold shadow-lg shadow-emerald-600/20 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
       >
         {loading ? (
           <>
-            <span className="w-4 h-4 border-2 border-white/30 dark:border-zinc-900/30 border-t-white dark:border-t-zinc-900 rounded-full animate-spin" aria-hidden="true" />
-            Auditing...
+            <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" aria-hidden="true" />
+            Analyzing...
           </>
         ) : (
           <>
-            <Zap className="w-4 h-4" aria-hidden="true" />
-            Run my audit
+            <Zap className="w-3.5 h-3.5" aria-hidden="true" />
+            Run audit
           </>
         )}
       </button>
