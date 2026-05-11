@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import type { AuditResult } from "@/lib/audit/types";
+import type { AuditResult, UseCase } from "@/lib/audit/types";
 import { severityConfig } from "@/lib/audit/severity";
 import { SeverityBadge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -10,14 +10,20 @@ import { FadeIn } from "@/components/ui/FadeIn";
 import { ToolIcon } from "@/components/icons/ToolIcon";
 import { SpendBar } from "@/components/SpendBar";
 import { ShareButtons } from "@/components/ShareButtons";
+import { Benchmark } from "@/components/Benchmark";
+import { DownloadButton } from "@/components/pdf/DownloadButton";
+import { getBenchmark } from "@/lib/audit/benchmarks";
+import { downloadCsv } from "@/lib/export/csv";
 import { formatUsd } from "@/lib/utils";
-import { ArrowRight, CheckCircle2, TrendingDown, AlertTriangle, Sparkles, ArrowLeft } from "lucide-react";
+import { ArrowRight, CheckCircle2, TrendingDown, AlertTriangle, Sparkles, ArrowLeft, FileDown } from "lucide-react";
 
 interface Props {
   result: AuditResult;
   summary?: string | null;
   onReset: () => void;
   auditUrl?: string | null;
+  teamSize?: number;
+  useCase?: UseCase;
 }
 
 const cardVariants = {
@@ -29,7 +35,7 @@ const cardVariants = {
   }),
 };
 
-export function Results({ result, summary, onReset, auditUrl }: Props) {
+export function Results({ result, summary, onReset, auditUrl, teamSize, useCase }: Props) {
   const {
     findings,
     totalMonthlySavings,
@@ -38,9 +44,13 @@ export function Results({ result, summary, onReset, auditUrl }: Props) {
     totalRecommendedMonthly,
     credexEligible,
     isOptimal,
+    perSeatSpendForBenchmark,
   } = result;
 
   const sortedFindings = [...findings].sort((a, b) => b.monthlySavings - a.monthlySavings);
+  const benchmark = teamSize && useCase
+    ? getBenchmark(useCase, teamSize, perSeatSpendForBenchmark)
+    : null;
 
   return (
     <div className="space-y-8">
@@ -105,6 +115,9 @@ export function Results({ result, summary, onReset, auditUrl }: Props) {
         </FadeIn>
       )}
 
+      {/* Benchmark */}
+      {benchmark && <Benchmark benchmark={benchmark} />}
+
       {/* Per-tool findings */}
       <FadeIn delay={0.2}>
         <section aria-label="Per-tool breakdown" className="space-y-3">
@@ -152,10 +165,19 @@ export function Results({ result, summary, onReset, auditUrl }: Props) {
         </section>
       </FadeIn>
 
-      {/* Share section */}
+      {/* Export + Share */}
       <FadeIn delay={0.3}>
-        <section className="rounded-2xl border border-border bg-card/30 p-5 sm:p-6">
-          <h3 className="text-[11px] font-medium uppercase tracking-wider text-muted mb-3">Share your results</h3>
+        <section className="rounded-2xl border border-border bg-card/30 p-5 sm:p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-[11px] font-medium uppercase tracking-wider text-muted">Share & Export</h3>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" onClick={() => downloadCsv(result)}>
+                <FileDown className="w-3 h-3" aria-hidden="true" />
+                CSV
+              </Button>
+              <DownloadButton result={result} summary={summary} shareUrl={auditUrl} />
+            </div>
+          </div>
           <ShareButtons savings={totalMonthlySavings} url={auditUrl} />
         </section>
       </FadeIn>

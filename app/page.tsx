@@ -7,18 +7,20 @@ import { Results } from "@/components/Results";
 import { LeadCapture } from "@/components/LeadCapture";
 import { PageShell } from "@/components/layout/PageShell";
 import { runAudit } from "@/lib/audit/engine";
-import type { AuditInput, AuditResult } from "@/lib/audit/types";
+import type { AuditInput, AuditResult, UseCase } from "@/lib/audit/types";
 
 export default function Home() {
   const [result, setResult] = useState<AuditResult | null>(null);
   const [summary, setSummary] = useState<string | null>(null);
   const [auditId, setAuditId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [auditInput, setAuditInput] = useState<{ teamSize: number; useCase: UseCase } | null>(null);
 
   const handleAudit = async (input: AuditInput) => {
     setLoading(true);
     const audit = runAudit(input);
     setResult(audit);
+    setAuditInput({ teamSize: input.teamSize, useCase: input.useCase });
     setSummary(null);
     setAuditId(null);
 
@@ -60,6 +62,7 @@ export default function Home() {
     setResult(null);
     setSummary(null);
     setAuditId(null);
+    setAuditInput(null);
   };
 
   return (
@@ -79,6 +82,8 @@ export default function Home() {
               summary={summary}
               onReset={reset}
               auditUrl={auditId ? `${typeof window !== "undefined" ? window.location.origin : ""}/audit/${auditId}` : null}
+              teamSize={auditInput?.teamSize}
+              useCase={auditInput?.useCase}
             />
             <LeadCapture result={result} auditId={auditId} />
           </motion.div>
