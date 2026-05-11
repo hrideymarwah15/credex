@@ -7,6 +7,9 @@ import { SeverityBadge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 import { FadeIn } from "@/components/ui/FadeIn";
+import { ToolIcon } from "@/components/icons/ToolIcon";
+import { SpendBar } from "@/components/SpendBar";
+import { ShareButtons } from "@/components/ShareButtons";
 import { formatUsd } from "@/lib/utils";
 import { ArrowRight, CheckCircle2, TrendingDown, AlertTriangle, Sparkles, ArrowLeft } from "lucide-react";
 
@@ -14,6 +17,7 @@ interface Props {
   result: AuditResult;
   summary?: string | null;
   onReset: () => void;
+  auditUrl?: string | null;
 }
 
 const cardVariants = {
@@ -25,7 +29,7 @@ const cardVariants = {
   }),
 };
 
-export function Results({ result, summary, onReset }: Props) {
+export function Results({ result, summary, onReset, auditUrl }: Props) {
   const {
     findings,
     totalMonthlySavings,
@@ -119,11 +123,15 @@ export function Results({ result, summary, onReset }: Props) {
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-1.5 flex-1 min-w-0">
                     <div className="flex items-center gap-2">
+                      <ToolIcon tool={f.tool} size={14} />
                       <span className="text-sm font-semibold text-heading">{f.toolLabel}</span>
                       <SeverityBadge severity={f.severity} />
                     </div>
                     <p className="text-xs text-foreground/70">{f.action}</p>
                     <p className="text-[11px] text-muted leading-relaxed">{f.reason}</p>
+                    {f.monthlySavings > 0 && (
+                      <SpendBar current={f.currentSpend} recommended={f.recommendedSpend} className="mt-2 max-w-xs" />
+                    )}
                   </div>
                   <div className="text-right shrink-0">
                     <div className="text-[10px] text-muted/60 font-mono">
@@ -141,6 +149,14 @@ export function Results({ result, summary, onReset }: Props) {
               </motion.div>
             );
           })}
+        </section>
+      </FadeIn>
+
+      {/* Share section */}
+      <FadeIn delay={0.3}>
+        <section className="rounded-2xl border border-border bg-card/30 p-5 sm:p-6">
+          <h3 className="text-[11px] font-medium uppercase tracking-wider text-muted mb-3">Share your results</h3>
+          <ShareButtons savings={totalMonthlySavings} url={auditUrl} />
         </section>
       </FadeIn>
 

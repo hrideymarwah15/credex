@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { TOOLS } from "@/lib/audit/pricing";
 import type { AuditInput, ToolId, ToolInput, UseCase, Intensity } from "@/lib/audit/types";
 import { Input, Select } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { ToolIcon } from "@/components/icons/ToolIcon";
+import { formatUsd } from "@/lib/utils";
 import { Plus, X, Zap } from "lucide-react";
 
 const STORAGE_KEY = "spendlens:form:v1";
@@ -59,6 +61,11 @@ export function AuditForm({ onSubmit, loading }: Props) {
 
   const { teamSize, useCase, tools } = formState;
 
+  const totalMonthly = useMemo(
+    () => tools.reduce((sum, t) => sum + t.monthlySpend, 0),
+    [tools],
+  );
+
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(formState));
@@ -97,7 +104,7 @@ export function AuditForm({ onSubmit, loading }: Props) {
       {/* Context row */}
       <div className="grid grid-cols-2 gap-3">
         <label className="block">
-          <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500 mb-1.5 block">Team size</span>
+          <span className="text-[11px] font-medium uppercase tracking-wider text-muted mb-1.5 block">Team size</span>
           <Input
             type="number"
             min={1}
@@ -106,7 +113,7 @@ export function AuditForm({ onSubmit, loading }: Props) {
           />
         </label>
         <label className="block">
-          <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500 mb-1.5 block">Use case</span>
+          <span className="text-[11px] font-medium uppercase tracking-wider text-muted mb-1.5 block">Use case</span>
           <Select
             value={useCase}
             onChange={(e) => setUseCase(e.target.value as UseCase)}
@@ -123,11 +130,11 @@ export function AuditForm({ onSubmit, loading }: Props) {
       {/* Tool rows */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">Your tools</span>
+          <span className="text-[11px] font-medium uppercase tracking-wider text-muted">Your tools</span>
           <button
             type="button"
             onClick={addTool}
-            className="inline-flex items-center gap-1 text-[11px] font-medium text-zinc-500 hover:text-emerald-400 uppercase tracking-wider transition-colors"
+            className="inline-flex items-center gap-1 text-[11px] font-medium text-muted hover:text-accent uppercase tracking-wider transition-colors"
           >
             <Plus className="w-3 h-3" aria-hidden="true" /> Add
           </button>
@@ -138,26 +145,15 @@ export function AuditForm({ onSubmit, loading }: Props) {
           return (
             <div
               key={idx}
-              className="group relative rounded-lg border border-zinc-800 bg-zinc-900/30 p-3 sm:p-4 hover:border-zinc-700 transition-colors"
+              className="group relative rounded-xl border border-border bg-card/30 p-3 sm:p-4 hover:border-muted/40 transition-colors"
             >
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-                <label className="col-span-1 sm:col-span-1">
-                  <span className="text-[10px] font-medium text-zinc-600 mb-1 block">Tool</span>
-                  <Select
-                    value={t.tool}
-                    onChange={(e) => handleToolChange(idx, e.target.value as ToolId)}
-                    inputSize="sm"
-                  >
-                    {Object.values(TOOLS).map((tool) => (
-                      <option key={tool.id} value={tool.id}>
-                        {tool.label}
-                      </option>
-                    ))}
-                  </Select>
-                </label>
-
-                <label className="col-span-1 sm:col-span-1">
-                  <span className="text-[10px] font-medium text-zinc-600 mb-1 block">Plan</span>
+              <div className="flex items-center gap-2 mb-2.5">
+                <ToolIcon tool={t.tool} size={14} />
+                <span className="text-xs font-medium text-foreground/70">{meta.label}</span>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <label>
+                  <span className="text-[10px] font-medium text-muted/70 mb-1 block">Plan</span>
                   <Select
                     value={t.plan}
                     onChange={(e) => updateTool(idx, { plan: e.target.value })}
@@ -171,8 +167,8 @@ export function AuditForm({ onSubmit, loading }: Props) {
                   </Select>
                 </label>
 
-                <label className="col-span-1 sm:col-span-1">
-                  <span className="text-[10px] font-medium text-zinc-600 mb-1 block">Seats</span>
+                <label>
+                  <span className="text-[10px] font-medium text-muted/70 mb-1 block">Seats</span>
                   <Input
                     type="number"
                     min={1}
@@ -184,8 +180,8 @@ export function AuditForm({ onSubmit, loading }: Props) {
                   />
                 </label>
 
-                <label className="col-span-1 sm:col-span-1">
-                  <span className="text-[10px] font-medium text-zinc-600 mb-1 block">$/mo</span>
+                <label>
+                  <span className="text-[10px] font-medium text-muted/70 mb-1 block">$/mo</span>
                   <Input
                     type="number"
                     min={0}
@@ -201,9 +197,9 @@ export function AuditForm({ onSubmit, loading }: Props) {
                   />
                 </label>
 
-                <div className="col-span-2 sm:col-span-1 flex items-end gap-2">
+                <div className="flex items-end gap-2">
                   <label className="flex-1">
-                    <span className="text-[10px] font-medium text-zinc-600 mb-1 block">Usage</span>
+                    <span className="text-[10px] font-medium text-muted/70 mb-1 block">Usage</span>
                     <Select
                       value={t.intensity ?? "regular"}
                       onChange={(e) =>
@@ -222,7 +218,7 @@ export function AuditForm({ onSubmit, loading }: Props) {
                     <button
                       type="button"
                       onClick={() => removeTool(idx)}
-                      className="mb-0.5 p-1.5 rounded text-zinc-600 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                      className="mb-0.5 p-1.5 rounded text-muted hover:text-red-400 hover:bg-red-500/10 transition-colors"
                       aria-label={`Remove tool ${idx + 1}`}
                     >
                       <X className="w-3.5 h-3.5" aria-hidden="true" />
@@ -234,6 +230,16 @@ export function AuditForm({ onSubmit, loading }: Props) {
           );
         })}
       </div>
+
+      {/* Live cost preview */}
+      {totalMonthly > 0 && (
+        <div className="flex items-center justify-between rounded-xl border border-border bg-card/30 px-4 py-3">
+          <span className="text-xs text-muted">Current total</span>
+          <span className="text-sm font-semibold font-mono tabular-nums text-heading">
+            {formatUsd(totalMonthly)}/mo
+          </span>
+        </div>
+      )}
 
       <Button type="submit" loading={loading} className="w-full" size="lg">
         {loading ? "Analyzing..." : (

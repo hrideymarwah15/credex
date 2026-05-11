@@ -74,7 +74,12 @@ export default function Home() {
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="space-y-8"
           >
-            <Results result={result} summary={summary} onReset={reset} />
+            <Results
+              result={result}
+              summary={summary}
+              onReset={reset}
+              auditUrl={auditId ? `${typeof window !== "undefined" ? window.location.origin : ""}/audit/${auditId}` : null}
+            />
             <LeadCapture result={result} auditId={auditId} />
           </motion.div>
         ) : (
