@@ -55,7 +55,17 @@ body {
 }
 
 input, select, button, a {
-  transition: all 0.15s ease;
+  transition-property: color, background-color, border-color, opacity, box-shadow;
+  transition-duration: 0.15s;
+  transition-timing-function: ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 input:focus-visible, select:focus-visible, button:focus-visible {
@@ -118,4 +128,13 @@ input[type="number"]::-webkit-outer-spin-button {
 .animate-gradient-border {
   animation: gradient-rotate 4s linear infinite;
   border-image: conic-gradient(from var(--gradient-angle), var(--accent), transparent 30%, var(--accent)) 1;
+}
+
+@keyframes savings-glow {
+  0% { text-shadow: 0 0 20px rgba(16, 185, 129, 0.4), 0 0 40px rgba(16, 185, 129, 0.2); }
+  100% { text-shadow: 0 0 0px rgba(16, 185, 129, 0), 0 0 0px rgba(16, 185, 129, 0); }
+}
+
+.savings-glow {
+  animation: savings-glow 1.8s ease-out 0.3s both;
 }

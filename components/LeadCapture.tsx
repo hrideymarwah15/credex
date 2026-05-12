@@ -74,21 +74,21 @@ export function LeadCapture({ result, auditId }: Props) {
           </div>
           <span className="text-sm font-medium">Sent — check your inbox.</span>
         </div>
-        <p className="text-xs text-zinc-500 leading-relaxed">
+        <p className="text-xs text-muted leading-relaxed">
           {isHighSavings
             ? "Full report sent. A Credex team member will reach out within 48 hours about additional savings."
             : "Report sent. We\u2019ll notify you when new savings opportunities apply to your stack."}
         </p>
 
         {shareUrl && (
-          <div className="pt-3 border-t border-zinc-800/50">
-            <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500 mb-2 block">Share link</span>
+          <div className="pt-3 border-t border-border/50">
+            <span className="text-[11px] font-medium uppercase tracking-wider text-muted mb-2 block">Share link</span>
             <div className="flex items-center gap-2">
               <input
                 readOnly
                 value={shareUrl}
                 aria-label="Shareable audit URL"
-                className="flex-1 text-xs bg-zinc-900/50 border border-zinc-800 rounded-md px-2.5 py-1.5 text-zinc-500 font-mono truncate"
+                className="flex-1 text-xs bg-card/50 border border-border rounded-md px-2.5 py-1.5 text-muted font-mono truncate"
               />
               <Button variant="secondary" size="sm" onClick={handleCopy}>
                 <Link2 className="w-3 h-3" aria-hidden="true" />
@@ -102,12 +102,12 @@ export function LeadCapture({ result, auditId }: Props) {
   }
 
   return (
-    <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-5 sm:p-6 space-y-4">
+    <div className="rounded-xl border border-border bg-card/30 p-5 sm:p-6 space-y-4">
       <div>
-        <h3 className="text-sm font-semibold text-white">
+        <h3 className="text-sm font-semibold text-heading">
           {isHighSavings ? "Get your report + consultation" : "Save your results"}
         </h3>
-        <p className="text-xs text-zinc-500 mt-1 leading-relaxed">
+        <p className="text-xs text-muted mt-1 leading-relaxed">
           {isHighSavings
             ? "We\u2019ll email the full report and connect you with our team for committed-use savings."
             : "We\u2019ll email your report and notify you when new savings apply."}
@@ -128,7 +128,7 @@ export function LeadCapture({ result, auditId }: Props) {
         </div>
 
         <label className="block">
-          <span className="text-[11px] font-medium text-zinc-500 flex items-center gap-1 mb-1">
+          <span className="text-[11px] font-medium text-muted flex items-center gap-1 mb-1">
             <Mail className="w-3 h-3" aria-hidden="true" /> Email
           </span>
           <Input
@@ -142,7 +142,7 @@ export function LeadCapture({ result, auditId }: Props) {
 
         <div className="grid grid-cols-3 gap-2">
           <label className="block">
-            <span className="text-[10px] font-medium text-zinc-600 flex items-center gap-1 mb-1">
+            <span className="text-[10px] font-medium text-muted/70 flex items-center gap-1 mb-1">
               <Building2 className="w-2.5 h-2.5" aria-hidden="true" /> Company
             </span>
             <Input
@@ -153,7 +153,7 @@ export function LeadCapture({ result, auditId }: Props) {
             />
           </label>
           <label className="block">
-            <span className="text-[10px] font-medium text-zinc-600 flex items-center gap-1 mb-1">
+            <span className="text-[10px] font-medium text-muted/70 flex items-center gap-1 mb-1">
               <Briefcase className="w-2.5 h-2.5" aria-hidden="true" /> Role
             </span>
             <Input
@@ -164,7 +164,7 @@ export function LeadCapture({ result, auditId }: Props) {
             />
           </label>
           <label className="block">
-            <span className="text-[10px] font-medium text-zinc-600 flex items-center gap-1 mb-1">
+            <span className="text-[10px] font-medium text-muted/70 flex items-center gap-1 mb-1">
               <Users className="w-2.5 h-2.5" aria-hidden="true" /> Team
             </span>
             <Input
@@ -177,7 +177,7 @@ export function LeadCapture({ result, auditId }: Props) {
           </label>
         </div>
 
-        <div className="flex items-center gap-1.5 text-[10px] text-zinc-600">
+        <div className="flex items-center gap-1.5 text-[10px] text-muted/70">
           <Lock className="w-2.5 h-2.5" aria-hidden="true" />
           We never share your data.
         </div>

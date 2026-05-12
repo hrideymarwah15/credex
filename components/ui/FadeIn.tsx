@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useInView } from "motion/react";
+import { motion, useInView, useReducedMotion } from "motion/react";
 
 interface Props {
   children: React.ReactNode;
@@ -20,7 +20,12 @@ const directionOffsets = {
 export function FadeIn({ children, className, delay = 0, direction = "up" }: Props) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-40px" });
+  const prefersReduced = useReducedMotion();
   const offset = directionOffsets[direction];
+
+  if (prefersReduced) {
+    return <div ref={ref} className={className}>{children}</div>;
+  }
 
   return (
     <motion.div

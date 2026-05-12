@@ -7,8 +7,8 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const variantStyles: Record<Variant, string> = {
-  default: "border-zinc-800 bg-zinc-900/30",
-  highlighted: "border-zinc-800 overflow-hidden",
+  default: "border-border bg-card/30",
+  highlighted: "border-border overflow-hidden",
   accent: "border-indigo-500/20 overflow-hidden",
 };
 

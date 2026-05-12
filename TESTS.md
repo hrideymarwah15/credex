@@ -9,21 +9,33 @@ npm test              # vitest run, exits 0/1
 npm run test:watch    # vitest watch mode
 ```
 
-## Test file: `lib/audit/engine.test.ts`
+## Test file: `__tests__/audit/engine.test.ts`
 
-9 tests, all covering the audit engine:
+14 tests covering the audit engine across 7 test suites:
 
-| # | Scenario | What it asserts | Why it matters |
-|---|----------|-----------------|----------------|
-| 1 | 2-person team on Claude Team plan | Recommends Pro × 2, surfaces $110/mo savings | Headline trap — Team has a 5-seat minimum, so a 2-person team pays for 3 ghost seats |
-| 2 | Cursor Business with 4 seats | Downgrades to Pro × 4, $80/mo savings, severity = save_big | Business ($40/seat) is overkill for sub-10-person teams without SSO needs |
-| 3 | Cursor Business with 15 seats | No downgrade, severity = optimal | At 15 seats SSO need is plausible — engine must NOT false-positive |
-| 4 | ChatGPT Pro $200, intensity=regular | Recommends Plus, $180/mo savings | Pro is for heavy o1-pro users; regular users belong on Plus |
-| 5 | ChatGPT Pro $200, intensity=heavy | No change, $0 savings | Inverse of #4 — heavy user, keep Pro. No manufactured savings |
-| 6 | Anthropic API $2.5k/mo | credexEligible=true, surfaces Credex consultation | >$1k API spend = Credex-eligible (credit marketplace fit) |
-| 7 | OpenAI API $80/mo | credexEligible=false | Modest spend shouldn't trigger Credex flag |
-| 8 | Optimal stack (Copilot Pro + Claude Pro) | isOptimal=true, totalMonthlySavings < $5 | The hardest property — engine must be honest when nothing to save |
-| 9 | Multi-tool totals math (3 tools) | totalMonthlySavings=330, annual=3960, current=470, recommended=140 | Catches summation bugs |
+| # | Test Suite | Scenario | What it asserts |
+|---|------------|----------|-----------------|
+| **Cursor auditing** |||
+| 1 | Cursor | Business → Pro for 4-person team | Detects overspend, recommends Pro, monthlySavings > 0, severity = save_big |
+| 2 | Cursor | Keep Business for 12-person team | No change recommended, monthlySavings = 0, severity = optimal |
+| 3 | Cursor | Windsurf alternative for non-coding | Suggests Windsurf for writing use case, monthlySavings > 0 |
+| **Claude auditing** |||
+| 4 | Claude | Team → Pro for 2-person team | Recommends Pro (avoids 5-seat minimum trap), monthlySavings > 0 |
+| 5 | Claude | Keep Team for ≥5 seats | No change, monthlySavings = 0 |
+| **GitHub Copilot** |||
+| 6 | Copilot | Business vs Individual for small team | Detects overspend on Business tier, monthlySavings > 0 |
+| **API-based tools** |||
+| 7 | Anthropic API | High API spend ($200/mo) | Flags and suggests subscription alternative |
+| **Multi-tool optimization** |||
+| 8 | Multi-tool | 3 tools with mixed findings | Calculates totalMonthlySavings, totalAnnualSavings, totalCurrentMonthly correctly |
+| 9 | Multi-tool | Already-optimal stack | isOptimal = true, totalMonthlySavings = 0 |
+| **Credex eligibility** |||
+| 10 | Credex | High-savings audit (>$500/mo) | credexEligible = true |
+| 11 | Credex | Low-savings audit (<$500/mo) | credexEligible = false |
+| **Edge cases** |||
+| 12 | Edge | Invalid tool ID | Doesn't throw, handles gracefully |
+| 13 | Edge | Zero monthly spend | Returns valid result with currentSpend = 0 |
+| 14 | Edge | Empty tools array | Returns valid result, totalSavings = 0, isOptimal = true |
 
 ## Why these specific tests
 

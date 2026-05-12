@@ -1,4 +1,5 @@
 import { forwardRef } from "react";
+import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 type Variant = "primary" | "secondary" | "ghost";
@@ -12,11 +13,11 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<Variant, string> = {
   primary:
-    "bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/20 active:scale-[0.98]",
+    "bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/20",
   secondary:
-    "bg-zinc-800 hover:bg-zinc-700 text-white",
+    "bg-card hover:bg-card-hover text-foreground border border-border",
   ghost:
-    "bg-transparent hover:bg-zinc-800/50 text-zinc-400 hover:text-zinc-200",
+    "bg-transparent hover:bg-surface text-muted hover:text-foreground",
 };
 
 const sizeStyles: Record<Size, string> = {
@@ -26,18 +27,21 @@ const sizeStyles: Record<Size, string> = {
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "primary", size = "md", loading, disabled, children, ...props }, ref) => {
+  ({ className, variant = "primary", size = "md", loading, disabled, children, onDrag: _onDrag, ...props }, ref) => {
+    const isDisabled = disabled || loading;
     return (
-      <button
+      <motion.button
         ref={ref}
-        disabled={disabled || loading}
+        disabled={isDisabled}
+        whileTap={isDisabled ? undefined : { scale: 0.97 }}
+        transition={{ type: "spring", stiffness: 400, damping: 25 }}
         className={cn(
-          "inline-flex items-center justify-center font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed",
+          "inline-flex items-center justify-center font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed",
           variantStyles[variant],
           sizeStyles[size],
           className,
         )}
-        {...props}
+        {...(props as Record<string, unknown>)}
       >
         {loading ? (
           <>
@@ -47,7 +51,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ) : (
           children
         )}
-      </button>
+      </motion.button>
     );
   },
 );

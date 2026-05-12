@@ -11,7 +11,7 @@ interface PageShellProps {
 
 export function PageShell({ children, title, subtitle, headerContent }: PageShellProps) {
   return (
-    <main className="mx-auto w-full max-w-2xl px-5 py-16 sm:py-24 flex-1">
+    <main id="main-content" className="mx-auto w-full max-w-2xl px-5 py-16 sm:py-24 flex-1">
       <header className="mb-14">
         <div className="flex items-center justify-between mb-6">
           <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-3 py-1">

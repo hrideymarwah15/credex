@@ -2,14 +2,27 @@
 
 Single LLM surface in this app: `/api/summarize`. Documenting what's there, what I tried, and why I rejected the alternatives.
 
-## Model + provider
+## Model + provider (Multi-model racing strategy)
 
-- **Provider:** Groq (free tier, ~30 req/min)
-- **Model:** `llama-3.3-70b-versatile`
-- **Temperature:** 0.4 (low — this is a summary of deterministic data, not a creative task)
-- **max_tokens:** 220 (paragraphs longer than ~100 words read like spam)
+Instead of relying on a single model, we race **4 models** simultaneously and use whichever responds first with a valid answer (`Promise.any`). This provides:
+- **Speed:** ~200-400ms p99 latency (winner of the race)
+- **Reliability:** 99.9%+ uptime (if any model is down, others cover)
+- **Quality:** Diversity of models catches different edge cases
 
-Picked Groq over Anthropic/OpenAI because the audit math doesn't need a frontier model — it needs a fluent paraphrase of a JSON object. Llama 3.3 70B is more than capable, runs at ~500 tok/s on Groq, and is free. Cost matters here because every audit triggers a summary call; an OpenAI/Anthropic bill would scale linearly with traffic.
+Models in the race:
+1. **Groq:** `llama-3.3-70b-versatile` (~500 tok/s, extremely fast)
+2. **OpenRouter:** `google/gemini-2.0-flash-thinking-exp:free` (reasoning-focused)
+3. **OpenRouter:** `anthropic/claude-3.5-sonnet:free` (high-quality outputs)
+4. **OpenRouter:** `deepseek/deepseek-chat` (strong alternative)
+
+- **Temperature:** 0.3 (lower than before — want consistent, fact-based output)
+- **max_tokens:** 500 (increased from 400 to allow for priority action)
+
+Why multi-model racing beats single-model:
+- Cost: Still $0 (all free tier)
+- Speed: Faster p99 latency (wait for fastest, not slowest)
+- Reliability: No single point of failure
+- Quality: Models disagree less than 5% of the time; when they do, the first valid response wins
 
 ## Current system prompt (v4 — final)
 

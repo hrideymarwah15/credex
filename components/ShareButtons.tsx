@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "motion/react";
 import { Link2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
@@ -8,6 +9,8 @@ interface Props {
   savings: number;
   url?: string | null;
 }
+
+const linkSpring = { type: "spring" as const, stiffness: 400, damping: 25 };
 
 export function ShareButtons({ savings, url }: Props) {
   const [copied, setCopied] = useState(false);
@@ -30,25 +33,31 @@ export function ShareButtons({ savings, url }: Props) {
 
   return (
     <div className="flex items-center gap-2 flex-wrap">
-      <a
+      <motion.a
         href={twitterUrl}
         target="_blank"
-        rel="noopener"
+        rel="noopener noreferrer"
+        whileHover={{ scale: 1.02, y: -1 }}
+        whileTap={{ scale: 0.98 }}
+        transition={linkSpring}
         className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card/50 px-3 py-1.5 text-xs font-medium text-foreground/70 hover:text-foreground hover:border-muted transition-colors"
       >
         <ExternalLink className="w-3 h-3" aria-hidden="true" />
         Post on X
-      </a>
+      </motion.a>
       {linkedinUrl && (
-        <a
+        <motion.a
           href={linkedinUrl}
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
+          whileHover={{ scale: 1.02, y: -1 }}
+          whileTap={{ scale: 0.98 }}
+          transition={linkSpring}
           className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card/50 px-3 py-1.5 text-xs font-medium text-foreground/70 hover:text-foreground hover:border-muted transition-colors"
         >
           <ExternalLink className="w-3 h-3" aria-hidden="true" />
           LinkedIn
-        </a>
+        </motion.a>
       )}
       {url && (
         <Button variant="ghost" size="sm" onClick={handleCopy}>

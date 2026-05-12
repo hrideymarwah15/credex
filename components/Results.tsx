@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import type { AuditResult, UseCase } from "@/lib/audit/types";
 import { severityConfig } from "@/lib/audit/severity";
 import { SeverityBadge } from "@/components/ui/Badge";
@@ -15,11 +15,12 @@ import { DownloadButton } from "@/components/pdf/DownloadButton";
 import { getBenchmark } from "@/lib/audit/benchmarks";
 import { downloadCsv } from "@/lib/export/csv";
 import { formatUsd } from "@/lib/utils";
-import { ArrowRight, CheckCircle2, TrendingDown, AlertTriangle, Sparkles, ArrowLeft, FileDown } from "lucide-react";
+import { ArrowRight, CheckCircle2, TrendingDown, AlertTriangle, Sparkles, ArrowLeft, FileDown, Zap } from "lucide-react";
 
 interface Props {
   result: AuditResult;
   summary?: string | null;
+  priorityAction?: string | null;
   onReset: () => void;
   auditUrl?: string | null;
   teamSize?: number;
@@ -35,7 +36,7 @@ const cardVariants = {
   }),
 };
 
-export function Results({ result, summary, onReset, auditUrl, teamSize, useCase }: Props) {
+export function Results({ result, summary, priorityAction, onReset, auditUrl, teamSize, useCase }: Props) {
   const {
     findings,
     totalMonthlySavings,
@@ -47,6 +48,7 @@ export function Results({ result, summary, onReset, auditUrl, teamSize, useCase 
     perSeatSpendForBenchmark,
   } = result;
 
+  const prefersReduced = useReducedMotion();
   const sortedFindings = [...findings].sort((a, b) => b.monthlySavings - a.monthlySavings);
   const benchmark = teamSize && useCase
     ? getBenchmark(useCase, teamSize, perSeatSpendForBenchmark)
@@ -54,6 +56,14 @@ export function Results({ result, summary, onReset, auditUrl, teamSize, useCase 
 
   return (
     <div className="space-y-8">
+      {/* Back button */}
+      <FadeIn>
+        <Button variant="ghost" size="sm" onClick={onReset}>
+          <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
+          Run new audit
+        </Button>
+      </FadeIn>
+
       {/* Savings hero */}
       <FadeIn>
         <section
@@ -82,10 +92,12 @@ export function Results({ result, summary, onReset, auditUrl, teamSize, useCase 
                 Estimated savings
               </div>
               <div className="flex items-baseline gap-2">
-                <AnimatedCounter
-                  value={totalMonthlySavings}
-                  className="text-5xl sm:text-6xl font-bold tracking-tighter text-heading font-mono tabular-nums"
-                />
+                <div className="savings-glow">
+                  <AnimatedCounter
+                    value={totalMonthlySavings}
+                    className="text-5xl sm:text-6xl font-bold tracking-tighter text-heading font-mono tabular-nums"
+                  />
+                </div>
                 <span className="text-lg text-muted/60 font-normal">/mo</span>
               </div>
               <p className="text-sm text-foreground/70">
@@ -111,6 +123,12 @@ export function Results({ result, summary, onReset, auditUrl, teamSize, useCase 
             <p className="text-base text-foreground/80 leading-relaxed whitespace-pre-line">
               {summary}
             </p>
+            {priorityAction && (
+              <div className="mt-4 flex items-start gap-2 rounded-lg bg-emerald-500/[0.06] border border-emerald-500/15 px-4 py-3">
+                <Zap className="w-3.5 h-3.5 text-emerald-400 mt-0.5 shrink-0" aria-hidden="true" />
+                <p className="text-sm text-foreground/80 font-medium">{priorityAction}</p>
+              </div>
+            )}
           </section>
         </FadeIn>
       )}
@@ -128,7 +146,7 @@ export function Results({ result, summary, onReset, auditUrl, teamSize, useCase 
               <motion.div
                 key={i}
                 custom={i}
-                initial="hidden"
+                initial={prefersReduced ? false : "hidden"}
                 animate="visible"
                 variants={cardVariants}
                 className={`rounded-xl border-l-[3px] ${config.accent} border ${config.border} ${config.bg} p-4 sm:p-5`}
@@ -201,7 +219,7 @@ export function Results({ result, summary, onReset, auditUrl, teamSize, useCase 
                 <a
                   href="https://credex.ai/consultation"
                   target="_blank"
-                  rel="noopener"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
                 >
                   Learn more <ArrowRight className="w-3 h-3" aria-hidden="true" />
@@ -212,12 +230,6 @@ export function Results({ result, summary, onReset, auditUrl, teamSize, useCase 
         </FadeIn>
       )}
 
-      <FadeIn delay={0.4}>
-        <Button variant="ghost" size="sm" onClick={onReset}>
-          <ArrowLeft className="w-3 h-3" aria-hidden="true" />
-          New audit
-        </Button>
-      </FadeIn>
     </div>
   );
 }

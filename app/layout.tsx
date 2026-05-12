@@ -28,6 +28,19 @@ export const metadata: Metadata = {
   title: "SpendLens — Audit your AI tool spend in 90 seconds",
   description:
     "Free audit for startups overpaying on Cursor, Copilot, Claude, ChatGPT, and API bills. See exactly where to cut without losing capability.",
+  openGraph: {
+    title: "SpendLens — Audit your AI tool spend in 90 seconds",
+    description:
+      "Free audit for startups overpaying on Cursor, Copilot, Claude, ChatGPT, and API bills. See exactly where to cut without losing capability.",
+    type: "website",
+    siteName: "SpendLens",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SpendLens — Audit your AI tool spend in 90 seconds",
+    description:
+      "Free audit for startups overpaying on Cursor, Copilot, Claude, ChatGPT, and API bills. See exactly where to cut without losing capability.",
+  },
 };
 
 export default function RootLayout({
@@ -42,6 +55,12 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:text-white focus:text-sm focus:font-medium"
+        >
+          Skip to main content
+        </a>
         <ThemeProvider>
           <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(16,185,129,0.05)_0%,_transparent_50%)] pointer-events-none" aria-hidden="true" />
           <div className="relative z-10 flex flex-col min-h-full">

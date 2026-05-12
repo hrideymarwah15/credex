@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
+import { motion } from "motion/react";
 import { TOOLS } from "@/lib/audit/pricing";
 import type { AuditInput, ToolId, ToolInput, UseCase, Intensity } from "@/lib/audit/types";
 import { Input, Select } from "@/components/ui/Input";
@@ -50,13 +51,10 @@ function readStorage(): AuditInput | null {
 }
 
 export function AuditForm({ onSubmit, loading }: Props) {
-  const [formState, setFormState] = useState<AuditInput>(() => {
-    const stored = readStorage();
-    return {
-      teamSize: stored?.teamSize ?? 1,
-      useCase: stored?.useCase ?? "coding",
-      tools: stored?.tools?.length ? stored.tools : [emptyTool()],
-    };
+  const [formState, setFormState] = useState<AuditInput>({
+    teamSize: 1,
+    useCase: "coding",
+    tools: [emptyTool()],
   });
 
   const { teamSize, useCase, tools } = formState;
@@ -65,6 +63,19 @@ export function AuditForm({ onSubmit, loading }: Props) {
     () => tools.reduce((sum, t) => sum + t.monthlySpend, 0),
     [tools],
   );
+
+  // Hydrate from localStorage after mount to avoid SSR mismatch
+  useEffect(() => {
+    const stored = readStorage();
+    if (stored) {
+      setFormState({
+        teamSize: stored.teamSize ?? 1,
+        useCase: stored.useCase ?? "coding",
+        tools: stored.tools?.length ? stored.tools : [emptyTool()],
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     try {
@@ -133,6 +144,7 @@ export function AuditForm({ onSubmit, loading }: Props) {
           <span className="text-[11px] font-medium uppercase tracking-wider text-muted">Your tools</span>
           <button
             type="button"
+            aria-label="Add tool"
             onClick={addTool}
             className="inline-flex items-center gap-1 text-[11px] font-medium text-muted hover:text-accent uppercase tracking-wider transition-colors"
           >
@@ -143,14 +155,26 @@ export function AuditForm({ onSubmit, loading }: Props) {
         {tools.map((t, idx) => {
           const meta = TOOLS[t.tool];
           return (
-            <div
+            <motion.div
               key={idx}
+              whileHover={{ scale: 1.01, y: -1 }}
+              whileTap={{ scale: 0.995 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
               className="group relative rounded-xl border border-border bg-card/30 p-3 sm:p-4 hover:border-muted/40 transition-colors"
             >
-              <div className="flex items-center gap-2 mb-2.5">
+              <label className="flex items-center gap-2 mb-2.5">
                 <ToolIcon tool={t.tool} size={14} />
-                <span className="text-xs font-medium text-foreground/70">{meta.label}</span>
-              </div>
+                <Select
+                  value={t.tool}
+                  onChange={(e) => handleToolChange(idx, e.target.value as ToolId)}
+                  inputSize="sm"
+                  className="text-xs font-medium text-foreground/70 border-0 bg-transparent p-0 h-auto focus:ring-0"
+                >
+                  {Object.values(TOOLS).map((tool) => (
+                    <option key={tool.id} value={tool.id}>{tool.label}</option>
+                  ))}
+                </Select>
+              </label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 <label>
                   <span className="text-[10px] font-medium text-muted/70 mb-1 block">Plan</span>
@@ -226,7 +250,7 @@ export function AuditForm({ onSubmit, loading }: Props) {
                   )}
                 </div>
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>

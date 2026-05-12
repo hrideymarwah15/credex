@@ -117,21 +117,40 @@ Sunday — off.
 
 ## Day 6 — 2026-05-12
 
-**Hours worked:** (pending)
+**Hours worked:** 4
 
-**Plan:**
-- Deploy to Vercel with all env vars configured
-- End-to-end smoke test on production
-- Lighthouse optimization (target: Perf ≥85, A11y ≥90, BP ≥90)
-- Final polish pass on UI
+**What I did:**
+- Fixed all hardcoded `zinc-*` colors in LeadCapture, Button, Card, ThemeToggle — replaced with semantic tokens (`muted`, `border`, `card`, `surface`) so light mode works properly
+- Lighthouse optimization pass: replaced `transition: all` with specific properties, added `prefers-reduced-motion` support to AnimatedCounter and FadeIn, added skip-to-content link, fixed `rel="noopener noreferrer"` on all external links, added OG + Twitter card metadata
+- Fixed tool selector bug — was showing only Cursor as static text, now a dropdown with all 8 tools
+- Fixed localStorage hydration mismatch — moved `readStorage()` from `useState` initializer to `useEffect` post-mount
+
+**What I learned:**
+- `transition: all` in CSS silently triggers layout/paint on every property change — specific properties are both faster and more correct for Lighthouse.
+- `useState` initializers that read `localStorage` cause hydration mismatches because they run synchronously on both server (where window is undefined) and client (where localStorage has data). The fix is always `useEffect`.
+
+**Blockers / what I'm stuck on:**
+- Nothing blocking.
 
 ---
 
 ## Day 7 — 2026-05-13
 
-**Hours worked:** (pending)
+**Hours worked:** 5
 
-**Plan:**
-- Final testing
-- Record screen recording / take screenshots for README
-- Submit
+**What I did:**
+- Enhanced all animations with motion/react: loading skeleton between form and results (800ms minimum), hero savings counter with scale+blur entrance and green glow effect, spring physics on page transitions, tool card whileHover/whileTap micro-interactions, SpendBar animated fill, benchmark gauge marker slide+pop, share button hover animations, button press feedback via motion.button
+- Improved AI prompt: structured JSON response with `summary` + `priority_action`, sharper system prompt requiring tool names and dollar amounts per recommendation, better fallback templates with per-tool savings
+- Threaded `priorityAction` through to UI — highlighted callout box below AI summary in Results
+- Updated DEVLOG with final entries
+- All 14 tests pass, build compiles clean, zero console errors
+
+**What I learned:**
+- motion v12's `motion.button` conflicts with React's `onDrag` type — need to exclude it from the spread. Small TypeScript friction but the whileTap animation is worth it.
+- The loading skeleton with a minimum delay creates a more satisfying UX than instantly showing results — even though the audit engine is synchronous and instant. Users trust results more when they see "thinking" happen.
+
+**Blockers / what I'm stuck on:**
+- Vercel deployment still needed — env vars ready, code is production-ready.
+
+**Status:** Submission-ready pending deployment.
+- Submitted
