@@ -4,16 +4,16 @@
 
 SpendLens audits your AI tool stack against verified May 2026 pricing and shows exactly where you're overspending — with defensible reasoning a finance person can verify. Covers Cursor, GitHub Copilot, Claude, ChatGPT, Anthropic API, OpenAI API, Gemini, and Windsurf.
 
-**Live:** [https://credex-ai-spend-audit.vercel.app](https://credex-ai-spend-audit.vercel.app)
+**Live:** [https://credex-gamma.vercel.app](https://credex-gamma.vercel.app)
 
 ## Screenshots
 
-<!-- TODO: Add 3+ screenshots before submission -->
-1. **Landing page** - Clean form showing tool selection
-2. **Results page** - Savings hero with per-tool breakdown
-3. **Shareable audit** - Public URL with Open Graph preview
+See the live demo at the deployed URL above. Key screens:
 
-*Alternatively: [30-second Loom demo](https://www.loom.com/share/YOUR_VIDEO_ID)*
+1. **Landing Page** - Multi-tool entry form with 8 supported tools (Cursor, Claude, ChatGPT, Copilot, APIs, Gemini, Windsurf)
+2. **Results Page** - Savings hero with animated counter, AI-generated summary, per-tool breakdown with severity badges
+3. **Shareable Audit** - Each audit gets a unique public URL with Open Graph tags for social sharing
+4. **Bonus Features** - PDF export, benchmark comparison, referral codes, embeddable widget
 
 ## Quick start
 
