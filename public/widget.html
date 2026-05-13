@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpendLens Widget</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0a0a0a;
+    }
+    .widget-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #fff;
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    p {
+      color: #888;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    .embed-code {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 32px;
+    }
+    .embed-code code {
+      color: #10b981;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 13px;
+      display: block;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .preview {
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 16px;
+      background: #111;
+    }
+    .preview h2 {
+      color: #fff;
+      font-size: 16px;
+      margin: 0 0 16px 0;
+    }
+    iframe {
+      border: none;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="widget-container">
+    <h1>SpendLens Embeddable Widget</h1>
+    <p>Drop this script tag anywhere on your site. Works in blog posts, documentation, anywhere HTML is allowed.</p>
+
+    <div class="embed-code">
+      <code>&lt;script src="https://spendlens.vercel.app/widget.js" data-theme="dark" async&gt;&lt;/script&gt;</code>
+    </div>
+
+    <div class="preview">
+      <h2>Live Preview</h2>
+      <div id="spendlens-widget"></div>
+    </div>
+  </div>
+
+  <script>
+    // Widget initialization
+    (function() {
+      const container = document.getElementById('spendlens-widget');
+      const theme = document.currentScript?.getAttribute('data-theme') || 'light';
+      const baseUrl = window.location.origin;
+
+      // Create iframe
+      const iframe = document.createElement('iframe');
+      iframe.src = `${baseUrl}/embed?theme=${theme}`;
+      iframe.width = '100%';
+      iframe.height = '600';
+      iframe.style.border = 'none';
+      iframe.style.borderRadius = '8px';
+      iframe.loading = 'lazy';
+
+      // Handle dynamic height
+      window.addEventListener('message', (e) => {
+        if (e.data.type === 'spendlens-resize') {
+          iframe.height = e.data.height + 'px';
+        }
+      });
+
+      container.appendChild(iframe);
+    })();
+  </script>
+</body>
+</html>

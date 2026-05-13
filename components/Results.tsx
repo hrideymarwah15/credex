@@ -12,6 +12,7 @@ import { SpendBar } from "@/components/SpendBar";
 import { ShareButtons } from "@/components/ShareButtons";
 import { Benchmark } from "@/components/Benchmark";
 import { DownloadButton } from "@/components/pdf/DownloadButton";
+import { ReferralCode } from "@/components/ReferralCode";
 import { getBenchmark } from "@/lib/audit/benchmarks";
 import { downloadCsv } from "@/lib/export/csv";
 import { formatUsd } from "@/lib/utils";
@@ -199,6 +200,9 @@ export function Results({ result, summary, priorityAction, onReset, auditUrl, te
           <ShareButtons savings={totalMonthlySavings} url={auditUrl} />
         </section>
       </FadeIn>
+
+      {/* Referral Code */}
+      <ReferralCode auditId={auditUrl?.split("/").pop() || null} savings={totalMonthlySavings} />
 
       {/* Credex CTA */}
       {credexEligible && (
