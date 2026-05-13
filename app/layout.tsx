@@ -19,7 +19,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fafafa" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#09090b" },
   ],
 };
@@ -62,7 +62,7 @@ export default function RootLayout({
           Skip to main content
         </a>
         <ThemeProvider>
-          <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(16,185,129,0.05)_0%,_transparent_50%)] pointer-events-none" aria-hidden="true" />
+          <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(5,150,105,0.04)_0%,_transparent_50%)] dark:bg-[radial-gradient(ellipse_at_top,_rgba(16,185,129,0.05)_0%,_transparent_50%)] pointer-events-none" aria-hidden="true" />
           <div className="relative z-10 flex flex-col min-h-full">
             {children}
           </div>

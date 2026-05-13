@@ -40,7 +40,7 @@ export function ShareButtons({ savings, url }: Props) {
         whileHover={{ scale: 1.02, y: -1 }}
         whileTap={{ scale: 0.98 }}
         transition={linkSpring}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card/50 px-3 py-1.5 text-xs font-medium text-foreground/70 hover:text-foreground hover:border-muted transition-colors"
+        className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-border bg-white dark:bg-card px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-foreground/70 hover:text-slate-900 dark:hover:text-foreground hover:border-slate-300 dark:hover:border-muted shadow-xs hover:shadow-sm transition-all"
       >
         <ExternalLink className="w-3 h-3" aria-hidden="true" />
         Post on X
@@ -53,7 +53,7 @@ export function ShareButtons({ savings, url }: Props) {
           whileHover={{ scale: 1.02, y: -1 }}
           whileTap={{ scale: 0.98 }}
           transition={linkSpring}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card/50 px-3 py-1.5 text-xs font-medium text-foreground/70 hover:text-foreground hover:border-muted transition-colors"
+          className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-border bg-white dark:bg-card px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-foreground/70 hover:text-slate-900 dark:hover:text-foreground hover:border-slate-300 dark:hover:border-muted shadow-xs hover:shadow-sm transition-all"
         >
           <ExternalLink className="w-3 h-3" aria-hidden="true" />
           LinkedIn
