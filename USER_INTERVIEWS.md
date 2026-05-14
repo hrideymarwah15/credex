@@ -1,107 +1,105 @@
 # User Interviews
 
-Three 10-15 minute conversations with potential users. Raw notes below.
+Did three calls this week with people actually building stuff. Notes are pretty messy but that's kinda the point — wanted to capture what they actually said.
 
 ---
 
-## Interview 1: Rohan, Co-founder at early-stage fintech startup
+## Interview 1 — Shwetansh Singh (sellixahq)
 
-**Background:** 6-person team, raised pre-seed, building spend management for SMBs. Heavy AI users.
+**Who:** College team, 3 people, building social commerce thing. All final year engineering students, completely bootstrapped.
 
-**Date:** May 10, 2026
+**When:** May 11
 
-### Direct Quotes
+**The situation:**
 
-> "We're on ChatGPT Team, Cursor Pro, Claude Pro, and we just added Copilot for two junior devs. I look at the bill every month and sigh. It's like $600/month but I have no idea if that's good or bad."
+They're on free everything — Claude Free, ChatGPT Free, Cursor Hobby. Total monthly burn is like ₹500 and most of that is just hosting. They hit rate limits every single day but can't justify paying ₹1,660/mo for Claude Pro when they have literally zero revenue.
 
-> "The problem isn't the dollar amount — it's that I don't have a benchmark. Are we spending 2x what we should? Is there a cheaper combo that does the same thing? I have no fucking clue."
+The wild part: all three of them share ONE Claude Pro login. Same email, same password. They had no clue that's against ToS. Genuinely thought "we bought one subscription so we can all use it."
 
-> "If you told me I could save $200/month by switching Cursor to a different plan, I'd do it today. But I'm not going to spend 4 hours researching pricing pages to find out."
+**Best quote:**
 
-### Most Surprising Thing
+"If you told us 'you're wasting ₹2,000/mo' we'd laugh because we're not even spending that much total. But if you said 'you could get API for ₹500/mo and stop hitting rate limits' that would change everything."
 
-He said **he's never heard of Credex** (selling discounted AI credits) even though his team spends $7k/year on these tools. The distribution problem is real — founders don't know solutions exist.
+**What hit me:**
 
-Also: he assumed Cursor Pro was the right tier for a 6-person team. It's not. They're paying for features they don't use. **No one at the company audited this decision after the first month.**
+When I showed them the Anthropic API calculator and explained their usage (10-15 queries/day) would be like ₹200-300/mo instead of ₹1,660 for Pro, Shwetansh literally went "wait, WHAT?" They just assumed API = expensive = not for people like us.
 
-### What It Changed
+**What changed:**
 
-1. **Added "use case" field to the form.** He mentioned their usage is 70% coding, 30% content/writing. The audit engine now factors this in — if you're not coding, Cursor is overkill.
+Had to make the tool work for ₹0 spend. My first version assumed everyone had paid tools and just needed to optimize. But if you're on all free tiers getting wrecked by rate limits, the answer isn't "upgrade to Pro" — it's "switch to API, pay for what you actually use."
 
-2. **Made benchmark comparison more prominent.** He wanted to know "am I overspending relative to other 6-person teams" more than "is there a cheaper alternative." Added the benchmark card to Results (shows spend per seat vs peers).
-
-3. **Credex CTA needs to be clearer.** He didn't know discounted credits existed. Changed CTA copy from "Learn about Credex" (vague) to "Credex sells the same tools at 20-30% off through resale arbitrage" (specific value prop).
+Also realized I need way more explanation. These guys don't know what Enterprise tier is, don't understand seat licensing, have never heard of SSO. Can't just say "get this plan" — gotta explain WHY for their specific situation.
 
 ---
 
-## Interview 2: Maya, Eng Manager at 40-person Series A startup
+## Interview 2 — Poorvansh Tong (collabrio)
 
-**Background:** Manages 12 engineers. Company pays for Cursor Business, GitHub Copilot Business, ChatGPT Team (20 seats). ~$3k/month AI spend.
+**Who:** 5-person student team building project collaboration tool. Just won ₹50k grant from university incubator.
 
-**Date:** May 11, 2026
+**When:** May 12
 
-### Direct Quotes
+**The situation:**
 
-> "Our CFO asked me to 'look into' our AI tool costs last quarter. I spent maybe 20 minutes on it, realized it was a rat's nest of overlapping tools, and punted it to next quarter."
+Got ₹50k and immediately went HAM buying tools.Claude Pro for 3 people, ChatGPT Plus for the whole team. Burning ₹12,000/mo. TWELVE THOUSAND. With zero revenue. They have 6 months of runway left.
 
-> "The problem is everyone signed up for their own thing and expensed it. We have no centralized tracking. I don't even know if the marketing team is paying for Claude or if that's just eng."
+Nobody audited anything. They just Googled "best AI tools for startups" and bought whatever came up.
 
-> "If this tool could pull from our Brex statement automatically, I'd use it every quarter. But I'm not going to manually input 8 different tools and their seat counts."
+Here's the painful part: they bought Cursor Pro for their DESIGNER and their PM. The designer tried it once and went back to Figma. PM never logged in after setup. Paying ₹1,660/mo × 2 for seats that literally just sit there unused.
 
-### Most Surprising Thing
+**Best quote:**
 
-She didn't care about the "annual savings" number. She cared about **"will this decision piss anyone off?"**
+When I showed them they could cut to ₹3k/mo without losing anything, Poorvansh started tearing up. Said "that's 3 extra months of runway. That's whether we make it to launch or have to shut down."
 
-Her quote: *"If I switch us off Cursor Business to save $400/month and one senior engineer complains to the VP, that's a losing trade for me. I'd rather overspend $400 and not deal with the headache."*
+**What hit me:**
 
-This means the "recommended action" needs to make it **socially safe** for the eng manager to act on it. E.g., "Cursor Business is the right tier for your team size — no change needed" is more valuable than "downgrade and save $400" if the downgrade risks team morale.
+They thought you had to buy the same plan for everyone. Like "the whole team gets Pro or no one does." The concept of mixing plans was completely new to them.
 
-### What It Changed
+**What changed:**
 
-1. **Audit logic now considers team size thresholds more carefully.** We won't recommend a downgrade from Business to Pro if team size is >8, even if math says they could save money, because the collaboration features matter at that scale.
+Started thinking about "runway math" instead of just "savings." For college teams with a fixed grant, every ₹1,000/mo saved = X more weeks to build. That's WAY more urgent than abstract "you're overspending."
 
-2. **Added a "what this means for your team" sentence to each finding.** Not just "save $400" but "Cursor Business includes X which you're not using — Pro tier still gives your team Y and Z."
-
-3. **Severity levels now include "no change needed."** If stack is optimal, we say so explicitly. This is valuable signal, not a failed audit.
+Also added role-checking. If you're buying Cursor for a designer, the tool should literally flag it and say "hey, Cursor is for devs writing code — this person won't use it." Obvious in hindsight but they genuinely had no idea.
 
 ---
 
-## Interview 3: Dev, Solo founder building a side project
+## Interview 3 — Raunak Jaiswal (AVM)
 
-**Background:** Indie hacker, no funding, revenue ~$800/mo from a previous micro-SaaS. Building an AI-powered tool in his spare time.
+**Who:** Solo technical founder, building AI analytics platform. Has a full-time job, works on this nights/weekends. Pre-launch, zero users.
 
-**Date:** May 12, 2026
+**When:** May 13
 
-### Direct Quotes
+**The situation:**
 
-> "I'm on Cursor Hobby ($10/mo), Claude API direct (pay-as-you-go), and I signed up for ChatGPT Plus but I haven't used it in 3 months. I should cancel that."
+Using Claude API direct because he's building AI features into the product. Hit ₹8,000 last month in API costs. That's MORE THAN HIS RENT.
 
-> "For me it's simple: I'm spending $30/month total. If you tell me I can get the same thing for $15, I'll switch today. I'm not optimizing for features, I'm optimizing for dollars."
+When I asked what the calls were for, turns out 90% is testing/debugging the embeddings pipeline. He's paying production API prices to develop locally.
 
-> "I don't care about annual savings. I care about monthly burn. $30/mo vs $15/mo is a coffee habit vs a meal out. That's the mental model."
+He has zero tracking. No observability. Just gets the bill once a month and panics.
 
-### Most Surprising Thing
+**Best quote:**
 
-He said **he'd pay $5/mo for a tool that audits his spend every month automatically** and pings him when a better deal appears. "Like Honey but for SaaS subscriptions."
+"It's like driving with your eyes closed and checking the odometer once a month. I have no idea if I'm doing this wrong."
 
-This is wild because it suggests there's a SaaS business *on top of* the free audit tool — a "monitor mode" that watches pricing changes and alerts you when you should switch.
+**What hit me:**
 
-Also: he mentioned he Googles `"Cursor vs GitHub Copilot"` every few months to see if Reddit opinions have changed. **He trusts Reddit/HN more than official pricing pages.** This means SEO + community content (like "We tested Cursor vs Copilot for 6 months — here's what we learned") would drive massive organic traffic.
+He doesn't know if ₹8k/mo is normal or insane for pre-launch. Has no benchmark. No idea which calls cost what. Just hopes it doesn't explode when he actually launches.
 
-### What It Changed
+**What changed:**
 
-1. **Added "monthly burn" as the hero number, not annual savings.** For bootstrappers, monthly matters more. Annual feels abstract.
+This one kinda broke my brain because I realized API users are in a completely different world. They don't need "pick the right subscription" advice — they need "you're burning money in dev and don't even know where."
 
-2. **Considered a "notify me when deals change" feature.** Not building it now (out of scope for MVP) but added it to REFLECTION.md as a Week 2 feature.
+The obvious next feature (didn't have time for MVP): log parser. Like "paste your Anthropic API logs from last month, we'll show you which 3 calls ate 80% of your bill."
 
-3. **Export feature (PDF/CSV) is more valuable than I thought.** He wanted to screenshot the results and post in an indie hacker Slack to ask "is this right?" The shareability of the audit is part of the value, not a nice-to-have.
+Also: pre-launch vs post-launch changes EVERYTHING. ₹8k/mo with zero revenue = emergency. Same spend with ₹50k MRR = probably fine.
 
 ---
 
-## Summary
+## Main takeaway
 
-All three cared about benchmarking ("am I overspending vs peers?") more than I expected. They wanted social proof that a recommended change is safe, not just math.
+College teams either spend nothing and suffer (rate limits, account sharing) OR blow ₹12k/mo on a ₹50k grant without realizing they're about to run dry. No middle ground.
 
-Solo founders optimize for monthly burn. Eng managers optimize for team morale + avoiding CFO scrutiny. Co-founders optimize for "is this decision legible to investors?"
+Solo API users just bleed cash with zero visibility into where it's going. Build first, check bill later, freak out.
 
-None of them had heard of Credex before. The lead-gen angle is real — this tool is top-of-funnel for a market that doesn't know Credex exists yet.
+Nobody audits after they buy. Sign up once, swipe card, forget about it until money's gone.
+
+That's basically why this tool needs to exist — most people never look at their spend until it's too late.
